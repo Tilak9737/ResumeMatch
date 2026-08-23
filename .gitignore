@@ -6,6 +6,11 @@ __pycache__/
 # Pytest
 .pytest_cache/
 
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+
 # Streamlit
 .streamlit/secrets.toml
 .env

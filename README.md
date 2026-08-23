@@ -6,15 +6,16 @@ ResumeMatch is a lightweight Streamlit application that evaluates a resume again
 
 ## Architecture and Methodology
 
-ResumeMatch uses a Natural Language Processing (NLP) pipeline leveraging TF-IDF and Cosine Similarity to evaluate resumes. The application employs a **Provisional Scoring Model** (30/30/20/10/10) to break down the match:
+ResumeMatch uses a Natural Language Processing (NLP) pipeline leveraging TF-IDF and Cosine Similarity to evaluate resumes. The application employs a **Provisional Scoring Model** (Day 4) to break down the match:
 
-*   **Keyword Match (30%)**: Evaluates how well the resume's n-grams match the core requirements of the job description using TF-IDF and cosine similarity.
-*   **Experience Level (30%)**: Extracts explicit years of experience from both texts and compares them.
-*   **Skills Match (20%)**: Checks for specific tools, languages, and skills mentioned in the JD against a predefined taxonomy and exact text matches.
-*   **Education (10%)**: Checks for required degrees (e.g., Bachelor's, Master's) based on keyword extraction.
-*   **Formatting/Length (10%)**: Provides a baseline score for resume length and readability.
+**Day 4 Provisional Model**
+*   **Keyword Coverage** 30%
+*   **TF-IDF Similarity** 30%
+*   **Skills Overlap** 20%
+*   **Required Coverage** 10%
+*   **Experience/Education** 10% [Deferred]
 
-*Note: The current scoring logic is a provisional implementation (Day 1-3) and serves as a placeholder for more advanced modeling.*
+*Note: The final 10% Experience/Education component is not active in Day 3/4. The active score is normalized over the implemented 90%: `(30×keyword + 30×similarity + 20×skills + 10×required) / 90`*
 
 ## Limitations
 
@@ -29,7 +30,9 @@ ResumeMatch uses a Natural Language Processing (NLP) pipeline leveraging TF-IDF 
 3.  Activate the environment:
     *   Windows: `venv\Scripts\activate`
     *   Mac/Linux: `source venv/bin/activate`
-4.  Install dependencies: `pip install -r requirements-dev.txt`
+4.  Install dependencies:
+    *   **Production**: `pip install -r requirements.txt`
+    *   **Development/Testing**: `pip install -r requirements-dev.txt`
 5.  Run the application: `streamlit run app.py`
 6.  Run tests: `pytest`
 
