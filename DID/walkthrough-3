@@ -1,0 +1,49 @@
+# ResumeMatch: Day 3 Complete (NLP Intelligence)
+
+The implementation for Day 3 is fully complete! We have officially upgraded our application from basic TF-IDF lexical overlap to **skill-aware and requirement-aware matching**.
+
+## What Was Accomplished
+
+### 1. The Skills Architecture (`skills.json` & `src/skills.py`)
+- **153 Canonical Skills**: Automatically generated a comprehensive JSON dictionary spanning Programming, Data Science, Machine Learning, Databases, Cloud, BI, DevOps, Frameworks, and Big Data.
+- **Hierarchical Parents**: Embedded a powerful hierarchy mapping each canonical skill (e.g., *PostgreSQL*) to its `generic_parent` (e.g., *SQL Database*).
+- **Bulletproof Alias Matching**: Implemented the `extract_skills` logic using `re.escape(alias)` coupled with robust non-alphanumeric boundary checks. 
+  - **F1/F2 Tests Pass**: Tested the dangerous edge cases. Our system easily extracts the canonical skill "R" from `"Built models in R."`, but entirely ignores the letter "r" in `"Our company develops software"`.
+
+### 2. Context-Aware Requirements (`src/requirements.py`)
+- We dropped naive proximity regexing in favor of **sentence-level semantic extraction**.
+- The algorithm splits Job Descriptions into strict sentence blocks. It tracks requirement context ("Required:", "Bonus:") and cleanly separates terms. 
+- *Result*: The system now correctly extracts "PostgreSQL" as a strict requirement and "AWS" as merely preferred without bleeding them together.
+
+### 3. Weak Evidence Detection (`src/recommendations.py`)
+- Built the 3-level evaluation system: 🟢 **Matched**, 🟡 **Weak Evidence**, 🔴 **Missing**.
+- The logic dynamically leverages the generic parent map. If a JD requests *PostgreSQL* but the resume only contains *MySQL* (or the generic term *Database*), the engine detects the shared generic parent and flags it as **Weak Evidence** rather than an outright miss.
+- Corresponding dynamic recommendations are appended to the user result: *"Specify PostgreSQL explicitly if you have used it (you mentioned related skills)."*
+
+### 4. Provisional Scoring (`src/scoring.py`)
+- Implemented the explicit **Day 3 Provisional Score Formula**: `(30 × keyword + 30 × similarity + 20 × skills + 10 × required) / 90`.
+- The missing 10% for Experience/Education is explicitly deferred to Day 5, keeping the score scientifically clean and preserving our original experimental weighting.
+
+## Day 3 Scientific Evaluation Results
+
+We ran `scripts/evaluate_day3.py` on the 6 structured tests. Here is what we found:
+
+> [!NOTE]
+> **Traceable Evolution (TF-IDF vs Day 3)**
+
+1. **Test A — Lexical Stuffing**: 
+   - *Result*: Successfully detected `AWS, Docker, Python, SQL`. Score remained high. 
+   - *Conclusion*: Skill-aware extraction successfully finds exactly what skills are written, proving that purely identifying skills is insufficient to defeat stuffing. We need Day 5's **Evidence Quality** layer to combat this.
+2. **Test B — Generic Terminology**: 
+   - *Result*: Day 1 TF-IDF scored **0.0%**. Day 3 correctly identified `WEAK EVIDENCE: PostgreSQL` and provided the recommendation.
+3. **Test C — Exact Skill**: 
+   - *Result*: Day 1 TF-IDF scored **58.0%**. Day 3 Provisional Score skyrocketed to **86.0%** because it recognized the exact skill coverage and requirement matching.
+4. **Test E — Alias Equivalence**: 
+   - *Result*: "Postgres" mapped perfectly to "PostgreSQL".
+5. **Test F — False-Positive Immunity**: 
+   - *Result*: True positive "R" was detected perfectly; the "r" in "Our" was ignored completely.
+
+## Next Steps
+The backend is now much smarter and outputs a massive amount of new structured data (`AnalysisResult.matched_skills`, `weak_evidence`, `missing_skills`, `recommendations`, etc.). 
+
+If you are satisfied, we can proceed to update the **Day 2 Streamlit UI** to actually display this incredible new data to the user!

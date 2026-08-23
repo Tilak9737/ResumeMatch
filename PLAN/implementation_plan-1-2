@@ -1,0 +1,112 @@
+# ResumeMatch Day 1 & Day 2 Implementation Plan
+
+This plan details the implementation for the first two days of the ResumeMatch 7-Day Data Science Product Sprint, focusing on building a production-ready core NLP engine and a clean, separated Streamlit interface.
+
+> [!IMPORTANT]
+> **User Review Required**: Please review the finalized structure and approach below. If you are satisfied with this plan, please approve it so we can begin execution!
+
+## Decisions Made
+- **Testing**: Using `pytest` and `pytest-cov` for testing and coverage.
+- **PDF Extraction**: Sticking with `pdfplumber` for the MVP.
+- **Architecture**: Strict separation between the NLP engine and the UI components. `app.py` handles UI only, delegating all logic to `src/analysis.py`.
+
+## Proposed Repository Structure
+
+```text
+ResumeMatch/
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── src/
+│   ├── __init__.py
+│   ├── parser.py
+│   ├── preprocess.py
+│   ├── similarity.py
+│   ├── keywords.py
+│   ├── validation.py
+│   ├── scoring.py
+│   ├── analysis.py
+│   ├── models.py
+│   ├── config.py
+│   └── logging_config.py
+├── components/
+│   ├── __init__.py
+│   ├── result_card.py
+│   └── error_state.py
+├── scripts/
+│   └── evaluate.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_parser.py
+│   ├── test_preprocess.py
+│   ├── test_similarity.py
+│   ├── test_keywords.py
+│   ├── test_validation.py
+│   └── fixtures/
+│       ├── valid_resume.pdf
+│       ├── empty.pdf
+│       ├── malformed.pdf
+│       └── scanned_resume.pdf
+├── data/
+│   └── examples/
+│       ├── pair_01/
+│       ├── pair_02/
+│       ├── pair_03/
+│       └── README.md
+└── .streamlit/
+    └── config.toml
+```
+
+## Day 1: NLP Engine Foundation
+
+**Focus:** Environment → Parser → Preprocessor → TF-IDF → Cosine → N-grams → Validation → Tests → Baseline experiment
+
+### Core Setup & Configuration
+- **[NEW] `.gitignore`**: Standard Python ignores (`.venv/`, `__pycache__/`, `.pytest_cache/`, `*.pyc`), `.streamlit/secrets.toml`, `.env`, and critically `data/user_uploads/` to prevent committing personal data.
+- **[NEW] `requirements.txt`**: Pin core dependencies (`pdfplumber`, `scikit-learn`, `streamlit`, `pytest`, `pytest-cov`). We will resolve and pin exact versions during setup.
+- **[NEW] `README.md`**: Minimal Day 1 status (Setup, Run evaluation, Run tests, Methodology).
+- **[NEW] `src/config.py`**: Centralize constants (e.g., `MAX_PDF_SIZE`, `MIN_JD_LENGTH`, `MIN_RESUME_LENGTH`, `NGRAM_RANGE`, `TOP_KEYWORDS`).
+- **[NEW] `src/logging_config.py`**: Configure basic logging to track events like "PDF extraction started", "PDF extraction failed", and "Analysis completed".
+
+### Data Models & Validation
+- **[NEW] `src/models.py`**: Define a structured `AnalysisResult` schema to prevent passing arbitrary dictionaries to the UI.
+- **[NEW] `src/validation.py`**: Implement input validation handling missing/empty files, short lengths, size limits, and basic file type checks.
+
+### NLP Pipeline Components
+- **[NEW] `src/parser.py`**: Implement PDF text extraction using `pdfplumber`.
+- **[NEW] `src/preprocess.py`**: Implement text cleaning, tokenization, case normalization, and stop-word handling.
+- **[NEW] `src/similarity.py`**: Implement TF-IDF vectorization and cosine similarity calculation.
+- **[NEW] `src/keywords.py`**: Implement basic n-gram extraction (unigrams, bigrams, trigrams) and TF-IDF-ranked term extraction.
+- **[NEW] `src/scoring.py`**: Create the initial scoring interface. For Day 1, it exposes `calculate_similarity_score()`. This prepares the architecture for the Day 3 hybrid score.
+
+### Testing & Baseline Evaluation
+- **[NEW] `tests/fixtures/`**: Add explicit test PDFs (`valid_resume.pdf`, `empty.pdf`, `malformed.pdf`, `scanned_resume.pdf`).
+- **[NEW] `tests/`**: Implement `pytest` test suites for parser, preprocess, similarity, keywords, and validation.
+- **[NEW] `data/examples/`**: Create structured baseline pairs (Strong match, Moderate match, Weak match, Unrelated, Same skills/different wording, Keyword stuffing).
+- **[NEW] `scripts/evaluate.py`**: Command-line script to run a **baseline sanity evaluation** across the dataset to prove the model behaves directionally as expected.
+
+---
+
+## Day 2: Product Shell (Streamlit)
+
+**Focus:** Analysis service → Result schema → Streamlit → Error handling → Score display → Manual QA
+
+### Core Architecture
+- **[NEW] `src/analysis.py`**: The central orchestrator. It executes the flow: `Validation` -> `Parser` -> `Preprocess` -> `Similarity` -> `Keywords` -> `Scoring` -> returns structured `AnalysisResult`.
+- **[NEW] `app.py`**: The pure UI layer. It collects inputs (Resume upload, JD text) and delegates all processing to `src/analysis.py`.
+
+### UI Components
+- **[NEW] `components/error_state.py`**: Renders clear error states to the user if validation or parsing fails.
+- **[NEW] `components/result_card.py`**: Renders the matched score and core signals based on the structured `AnalysisResult`.
+
+## Verification Plan
+
+### Automated Tests
+- Run `pytest --cov=src tests/` to ensure meaningful coverage of the analytical core (parser, preprocessor, validation, similarity).
+
+### Baseline Validation (Day 1)
+- Run `python scripts/evaluate.py data/examples/` and assert the directional accuracy of the cosine similarity baseline against the defined scenarios.
+
+### Manual UI Verification (Day 2)
+- Run `streamlit run app.py` and test the flow with a valid resume, a broken PDF, and various job descriptions to ensure clean UI error handling and correct score display.

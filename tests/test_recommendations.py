@@ -1,0 +1,27 @@
+from src.recommendations import generate_recommendations
+
+def test_generate_recommendations():
+    skills_dict = {
+        "postgresql": {"canonical": "PostgreSQL", "generic_parent": "SQL Database"},
+        "mysql": {"canonical": "MySQL", "generic_parent": "SQL Database"},
+        "sql server": {"canonical": "SQL Server", "generic_parent": "SQL Database"},
+        "python": {"canonical": "Python", "generic_parent": "Programming Language"},
+        "docker": {"canonical": "Docker", "generic_parent": "DevOps"}
+    }
+    
+    resume_skills = ["Python", "MySQL"]
+    job_required = ["Python", "PostgreSQL", "Docker"]
+    job_preferred = []
+    
+    res = generate_recommendations(resume_skills, job_required, job_preferred, skills_dict)
+    
+    # Python should match
+    assert "Python" in res["matched_skills"]
+    
+    # PostgreSQL is required, but resume has MySQL (same parent). So it's Weak Evidence.
+    assert "PostgreSQL" in res["weak_evidence"]
+    assert "PostgreSQL" not in res["missing_skills"]
+    
+    # Docker is required, resume has nothing related. Missing.
+    assert "Docker" in res["missing_skills"]
+    assert "Docker" not in res["weak_evidence"]

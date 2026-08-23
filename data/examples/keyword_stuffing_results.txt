@@ -1,0 +1,5 @@
+Keyword Stuffing Experiment Results:
+Resume A (Normal relevant experience): 60.30%
+Resume B (Irrelevant but repeated keywords): 57.97%
+
+Conclusion: TF-IDF is highly susceptible to lexical repetition and lacks semantic understanding of actual skill possession.

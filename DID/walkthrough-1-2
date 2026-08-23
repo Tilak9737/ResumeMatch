@@ -1,0 +1,59 @@
+# ResumeMatch: Detailed Walkthrough (Day 1 & Day 2)
+
+This document provides a comprehensive breakdown of the exact files, architecture, and logic implemented during Day 1 and Day 2 of the ResumeMatch 7-Day Data Science Product Sprint. The primary focus was on building a robust, testable NLP foundation and a cleanly separated Streamlit product shell.
+
+---
+
+## Post-Review Enhancements & Fixes (Pre-Day 3)
+Following the initial implementation, four critical checks were applied to solidify the foundation before moving to Day 3:
+
+1. **Terminology Accuracy**: Changed UI labels in `components/result_card.py` from "Match Score" to **"Resume–Job Similarity"**. "Matched/Missing Keywords" was adjusted to **"Top Matching Terms"** and **"Potentially Missing Terms"**. This preserves intellectual honesty until true semantic skill matching arrives in Day 3.
+2. **Technical Preprocessing Fidelity**: Overhauled `src/preprocess.py` to preserve essential technical terminology (e.g., `C++`, `C#`, `.NET`, `Node.js`, `CI/CD`). Tests were verified against these exact terms.
+3. **Scientific Sanity Baseline**: Re-labeled our 6-pair dataset as the **Baseline Sanity Dataset** rather than a full experiment. It proves identical texts hit ~1.0 similarity and unrelated texts hit ~0.0.
+4. **Keyword Stuffing Evaluation**: Created `scripts/keyword_stuffing_experiment.py` and saved the output to `data/examples/keyword_stuffing_results.txt`. This explicitly demonstrates that TF-IDF can be manipulated by lexical repetition and has no semantic understanding of whether a skill is *actually* demonstrated—perfectly justifying the need for the Day 3 intelligence layer.
+
+---
+
+## Day 1: NLP Engine Foundation
+
+For Day 1, we prioritized the core analytical engine, focusing on "proving the math" and setting up a robust, testable pipeline before any UI was introduced.
+
+### 1. Repository Structure & Configuration
+*   **`.gitignore`**: Created standard Python ignores (like `__pycache__`, `.venv`, `.pytest_cache`) and critically excluded `data/user_uploads/` to guarantee user privacy and prevent accidental commits of personal resumes.
+*   **`requirements.txt`**: Defined our core toolchain: `pdfplumber` (extraction), `scikit-learn` (NLP/math), `streamlit` (UI), `pytest`, and `pytest-cov` (testing).
+*   **`src/config.py`**: Centralized magic numbers and thresholds to prevent hardcoding. This includes `MAX_PDF_SIZE_MB`, `MIN_JD_LENGTH`, `NGRAM_RANGE = (1, 3)`, and `TOP_KEYWORDS = 20`.
+*   **`src/logging_config.py`**: Configured standard Python `logging` to track important analytical events (e.g., "PDF extraction started", "PDF extraction failed", "Characters extracted") which will be invaluable for debugging once deployed.
+
+### 2. Data Models & Validation (Guardrails)
+*   **`src/models.py`**: Introduced a strict `AnalysisResult` dataclass. This schema enforces a contract between the backend NLP engine and the frontend UI, ensuring Streamlit components receive structured, predictable data rather than arbitrary dictionaries. It is designed to be easily extensible for Day 3 (skills overlap, required term coverage, weak evidence).
+*   **`src/validation.py`**: Created explicit input validation modules to catch errors early. This cleanly separates extraction errors (corrupt PDF) from text-parsing errors (0 extractable text from a scanned PDF).
+
+### 3. Core NLP Pipeline
+*   **`src/parser.py`**: Implemented `extract_text_from_pdf` using `pdfplumber` with proper error handling and logging.
+*   **`src/preprocess.py`**: Created `clean_text` to normalize case, remove non-alphanumeric artifacts using Regex (while carefully retaining C++, C#, .NET, etc.), and strip excess whitespace.
+*   **`src/similarity.py`**: Implemented the baseline analytical metric using `scikit-learn`. Uses `TfidfVectorizer` and `cosine_similarity` to calculate a 0-100 normalized lexical overlap score between the resume and job description.
+*   **`src/keywords.py`**: Created `extract_top_keywords` to extract unigrams, bigrams, and trigrams ranked by TF-IDF, representing the most salient terms in the text.
+*   **`src/scoring.py`**: Established the scoring interface (`calculate_similarity_score`). While currently just passing through the similarity score, this architectural decision ensures Day 3's hybrid scoring model can be implemented without refactoring the entire pipeline.
+
+### 4. Testing & Baseline Evaluation
+*   **Test Fixtures (`tests/fixtures/`)**: Programmatically generated controlled PDF files (a valid PDF, an empty PDF, a malformed text file disguised as a PDF, and a scanned mock PDF) to thoroughly test the parser.
+*   **Unit Tests (`tests/`)**: Built robust `pytest` suites covering validation, preprocessing, similarity math (identical ≈ 1.0, unrelated ≈ 0.0), keywords, and parsing. All 17 tests successfully passed.
+*   **`scripts/evaluate.py`**: Built a command-line evaluation script that runs the entire pipeline against the baseline dataset, allowing us to scientifically observe how the baseline cosine similarity score reacts to different textual scenarios.
+
+---
+
+## Day 2: Product Shell (Streamlit)
+
+For Day 2, the goal was to wrap the tested NLP engine into a functional interface while maintaining strict separation of concerns.
+
+### 1. Architectural Orchestration
+*   **`src/analysis.py`**: This is the most crucial architectural addition for Day 2. It acts as the orchestrator. It sequentially executes the flow: `Validation` -> `Parser` -> `Preprocess` -> `Similarity` -> `Keywords` -> `Scoring`, and finally constructs and returns the structured `AnalysisResult`. This keeps all NLP logic strictly isolated from the UI layer, meaning the engine can easily be repurposed for an API, CLI, or Jupyter Experiment Notebook in the future.
+
+### 2. Streamlit UI Components
+*   **`app.py`**: The main entry point. It is kept intentionally "dumb", handling only user inputs (File Uploader and Text Area), displaying loading states (`st.spinner`), saving uploaded files to a temporary path, calling `analyze_resume_match()`, and cleaning up the temp file afterwards.
+*   **`components/error_state.py`**: A modular UI component that gracefully renders any parsing or validation errors (e.g., "File too large" or "PDF is empty") returned in the `AnalysisResult` using Streamlit error blocks.
+*   **`components/result_card.py`**: A modular UI component responsible for displaying the final outcome. It uses `st.metric` for the Resume-Job Similarity and `st.columns` to layout the Top Matching Terms and Potentially Missing Terms.
+*   **`.streamlit/config.toml`**: Added basic theme configuration (primary color, background, text color) to provide a slightly more polished and professional look out of the box.
+
+### Conclusion of Day 1 & Day 2
+The codebase is fundamentally frozen for Day 1 and 2. We have a fully functioning, mathematically sound, locally tested application. The rigorous separation of concerns ensures that as we dive into Day 3 to tackle the known semantic weaknesses of TF-IDF (Skill detection, Requirements mapping, and Weak Evidence), the UI and application shell will remain perfectly intact.

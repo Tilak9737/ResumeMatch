@@ -1,0 +1,382 @@
+RESUMEMATCH
+7-Day Data Science Product Sprint
+Resume → Job Description → Analysis → Action
+PRODUCT PROMISESee how well your resume matches a job before you apply — and, more importantly, understand exactly what to change.
+Objective: ship a real, public, measurable product in 7 days while producing a credible MSc Data Science portfolio project.
+1. Executive Summary
+ResumeMatch is a lightweight resume-to-job-description analysis product built around classical NLP rather than opaque AI scoring. The sprint prioritizes a reliable analytical engine first, then wraps it in a simple product, deploys it publicly, and validates it with real users.
+Core workflow: upload a resume PDF → paste a job description → analyze → inspect match score → see matched, missing, and weak evidence → receive concrete improvement actions.
+Primary analytical methods: TF-IDF, cosine similarity, n-grams, keyword extraction, skill matching, required-term coverage, and a transparent weighted scoring model.
+The headline metric is 'Resume–Job Similarity' or 'Match Score', not an ATS compatibility guarantee.
+The product should explain why a score was produced instead of presenting a mysterious percentage.
+Analytics should focus on meaningful product events rather than page-view vanity metrics.
+The final GitHub repository should include an experiment comparing a TF-IDF baseline against progressively richer hybrid scoring models.
+SUCCESS DEFINITIONBy the end of Day 7: a public URL works end-to-end, common PDF/JD cases are handled, the repository documents the methodology, real users have tested it, feedback has been collected, and at least one iteration has been shipped from observed evidence.
+2. Goals, Non-Goals & Guardrails
+Goals
+Build a functioning NLP engine before spending time on UI polish.
+Make the scoring methodology reproducible and explainable.
+Provide recommendations that a job applicant can immediately act on.
+Deploy a free/low-friction public version.
+Collect useful product feedback and failure cases.
+Create an MSc-ready technical story with experiments, evaluation, limitations, and reproducible code.
+Non-Goals for the 7-Day Sprint
+Do not build a full generative-AI resume writer.
+Do not promise that the score predicts ATS rejection or hiring outcomes.
+Do not build accounts, billing, subscriptions, or complex dashboards unless the core product is already stable.
+Do not make Google Analytics or a Sheets webhook a dependency for product analytics.
+Do not attempt to support every document format on Day 1; prioritize common text-based PDFs.
+Product Guardrails
+Never claim an exact ATS score.
+Clearly label the score as an internal Resume–Job Match metric.
+Avoid storing uploaded resumes unless there is a clear, documented reason and consent.
+Do not expose one user's resume/JD content to another user.
+Gracefully reject scanned/image-only PDFs in the MVP or clearly explain the limitation.
+Treat recommendations as suggestions, not guarantees of hiring success.
+3. Product Definition
+Positioning
+ResumeMatch — See how well your resume matches a job before you apply.
+Core user journey
+Upload Resume.
+Paste Job Description.
+Click Analyze.
+Extract and normalize text.
+Calculate analytical signals.
+Generate transparent score and breakdown.
+Show matched, missing, and weak terms.
+Generate prioritized improvement actions.
+Optionally submit feedback.
+Example result
+78% MATCHSimilarity 84% · Skills 72% · Keyword coverage 76% · Required terminology 81%. Primary limitation: missing technical skills and weak evidence for two required responsibilities.
+The 'Why?' layer
+Similarity: 84%
+Skills overlap: 72%
+Keyword coverage: 76%
+Required-term coverage: 81%
+Experience/education terminology: 80%
+Explain the top 2–3 factors lowering the score.
+Link each problem to an action: add a missing skill, strengthen evidence, quantify an achievement, or clarify terminology.
+4. Scoring Methodology
+The score should combine several measurable signals. Start with a fixed, documented weighting model; later experiments can tune the weights.
+Signal
+Weight
+What it measures
+Example
+Keyword coverage
+30%
+How many relevant job terms appear in the resume.
+Python, SQL, ETL
+TF-IDF similarity
+30%
+Lexical similarity between resume and JD.
+Cosine similarity
+Skills overlap
+20%
+Intersection of detected skills.
+Python ∩ SQL ∩ AWS
+Required-term coverage
+10%
+Coverage of terms that appear mandatory.
+Required: PostgreSQL
+Experience/education terminology
+10%
+Evidence that role/degree language is represented.
+Data Analyst, MSc
+Recommended formula: Overall Match = 0.30×Keyword Coverage + 0.30×TF-IDF Similarity + 0.20×Skills Overlap + 0.10×Required-Term Coverage + 0.10×Experience/Education Terminology.
+Important: normalize every component to a 0–100 scale before applying weights. Keep the raw component values in the result object so the UI can explain the score.
+5. NLP Engine Architecture
+The analytical pipeline should be deterministic and testable:
+Input validation — verify PDF type, file size, extracted text length, and JD length.
+PDF extraction — use a robust text extraction library such as pdfplumber for text-based PDFs.
+Text normalization — lowercase where appropriate, normalize whitespace, remove obvious artifacts while preserving meaningful terms.
+Tokenization / sentence processing — split text into usable units.
+Stop-word handling — remove common function words for analytical features, but retain original text for evidence display.
+N-gram extraction — identify useful phrases such as 'machine learning', 'data analysis', 'power bi', and 'cloud computing'.
+TF-IDF vectorization — represent resume and JD using a shared vocabulary.
+Cosine similarity — establish the baseline lexical similarity signal.
+Skill/entity detection — identify technical skills, tools, technologies, role terminology, education terminology, and selected domain terms.
+Comparison — classify relevant terms as matched, missing, or weakly evidenced.
+Scoring — calculate each component and combine them using the documented weights.
+Recommendation generation — translate analytical gaps into prioritized, human-readable actions.
+Matched / Missing / Weak Evidence
+Matched: the resume contains a relevant skill or phrase with reasonable evidence.
+Missing: a relevant job requirement is not detected in the resume.
+Weak evidence: the resume contains a generic concept but does not clearly demonstrate the specific requirement.
+WEAK-EVIDENCE EXAMPLEResume: 'Worked with databases.'  |  Job description: 'PostgreSQL experience required.'  |  Classification: Weak evidence. Recommendation: explicitly name PostgreSQL if the applicant genuinely used it and add a concrete example.
+6. The 7-Day Sprint Plan
+DAY 1 — NLP ENGINE
+Goal: prove the math before building the product.
+Set up Python virtual environment and repository structure.
+Implement PDF text extraction with clear failure handling.
+Create a text-cleaning module.
+Implement TF-IDF vectorization.
+Implement cosine similarity.
+Create a first command-line evaluation script: resume.pdf + job.txt → similarity + extracted terms.
+Build unit tests for extraction, empty inputs, very short inputs, and malformed text.
+Create 5–10 controlled resume/JD examples to verify that obviously related pairs score higher than unrelated pairs.
+Expected artifacts: src/parser.py · src/preprocess.py · src/similarity.py · src/keywords.py · tests/ · data/examples/
+DAY 2 — PRODUCT SHELL
+Goal: turn the working engine into a usable interface.
+Build the Streamlit interface.
+Add resume PDF uploader.
+Add job-description text area.
+Add Analyze button and loading state.
+Display match score and core signals.
+Show clear parsing and validation errors.
+Keep the UI intentionally simple: input → analysis → action.
+Return a structured result object from the engine so the UI does not contain scoring logic.
+Expected artifacts: app.py · src/analysis.py · components/result_card.py · components/error_state.py
+DAY 3 — NLP INTELLIGENCE
+Goal: move beyond a simple similarity demo.
+Add n-gram extraction.
+Add keyword ranking.
+Add skill detection using a curated skill dictionary and normalization map.
+Detect common variants and aliases where practical: 'Postgres' → 'PostgreSQL', etc.
+Identify required language such as 'required', 'must have', 'essential', and 'preferred'.
+Compare resume and JD terms.
+Generate matched, missing, and weak-evidence groups.
+Add initial recommendation rules.
+Expected artifacts: src/skills.py · src/requirements.py · src/recommendations.py · data/skills.json
+DAY 4 — DEPLOYMENT
+Goal: make the product publicly usable.
+Clean repository and add requirements.txt.
+Add README with setup and methodology.
+Create deployment configuration for the chosen Streamlit-compatible host.
+Deploy the first public version.
+Test on multiple browsers and mobile widths.
+Test text-based PDFs with 1–5 pages.
+Test empty, tiny, unusually formatted, and malformed PDFs.
+Fix all P0/P1 deployment blockers.
+Add privacy messaging explaining how uploads are handled.
+Expected artifacts: README.md · requirements.txt · deployment config · privacy notice
+DAY 5 — PRODUCT INTELLIGENCE
+Goal: make the output useful enough that users want to return.
+Implement transparent score breakdown.
+Add 'Why did I get this score?' interaction.
+Prioritize recommendations by estimated impact.
+Add example resume/JD pair for instant exploration.
+Add lightweight feedback collection.
+Track only meaningful events: analysis started, analysis completed, PDF parsing failed, similarity generated, missing keywords shown, Improve Resume clicked, feedback submitted.
+Keep analytics anonymous/minimal where possible and avoid storing resume content in event payloads.
+Expected artifacts: Score breakdown UI · recommendation ranking · feedback flow · event schema
+DAY 6 — DISTRIBUTION
+Goal: get the product in front of the right first users.
+Polish the landing copy around the searchable problem: 'match your resume to a job before applying'.
+Create a strong GitHub README with screenshots, methodology, limitations, and local setup.
+Share a useful, non-spammy launch post in relevant communities where self-promotion is allowed.
+Use Reddit/Discord/Slack communities selectively and follow each community's rules.
+Create a short demo showing the score breakdown and actionable recommendations.
+Add basic SEO-friendly page copy and descriptive metadata if supported by the hosting setup.
+Collect the first real user comments and categorize them.
+Expected artifacts: Launch post · GitHub README · demo asset · community feedback log
+DAY 7 — LIVE PRODUCT QA
+Goal: turn real usage into the first product iteration.
+Run a structured QA pass using real-world PDFs and varied job descriptions.
+Record every failure and classify it as parsing, NLP, scoring, UI, deployment, or copy issue.
+Inspect analytics events for completed vs failed analyses.
+Review user feedback.
+Fix the highest-impact issues first.
+Commit changes with clear messages.
+Tag the first stable release.
+Document what changed because of real user evidence.
+Write the final project experiment plan and next-step backlog.
+Expected artifacts: QA matrix · issue log · release tag · experiment backlog
+7. Recommended Repository Structure
+ResumeMatch/├── app.py├── requirements.txt├── README.md├── LICENSE├── .gitignore├── src/│   ├── parser.py│   ├── preprocess.py│   ├── similarity.py│   ├── keywords.py│   ├── skills.py│   ├── requirements.py│   ├── scoring.py│   ├── recommendations.py│   └── analysis.py├── components/│   ├── result_card.py│   ├── score_breakdown.py│   └── feedback.py├── tests/│   ├── test_parser.py│   ├── test_similarity.py│   ├── test_keywords.py│   └── test_scoring.py├── data/│   ├── skills.json│   └── examples/├── experiments/│   ├── baseline.ipynb│   └── hybrid_model_comparison.ipynb└── docs/    ├── methodology.md    ├── evaluation.md    └── privacy.md
+8. MSc Data Science Experiment Plan
+The portfolio value increases substantially if the project measures whether the hybrid scoring approach is better than a simple lexical baseline.
+Research question
+How effectively can classical NLP techniques measure lexical and semantic alignment between a resume and a job description, and does a weighted hybrid model provide a more useful assessment than TF-IDF similarity alone?
+Experimental comparison
+Model
+Signals
+Purpose
+Expected limitation
+Baseline A
+TF-IDF + cosine similarity
+Simple classical NLP baseline
+Can miss explicit skill requirements
+Baseline B
+TF-IDF + keyword coverage
+Adds lexical requirement awareness
+Still weak on skill equivalence/context
+Hybrid
+TF-IDF + keywords + skills + required terms + terminology
+Transparent multi-signal model
+Depends on dictionaries/rules and weighting
+Dataset plan
+Target 50–100 synthetic or carefully constructed resume/JD pairs for the initial experiment.
+Include strong matches, partial matches, weak matches, and unrelated pairs.
+Avoid using real people's private resumes without permission.
+Create a human relevance label for each pair, for example 0–3: unrelated, weak, moderate, strong.
+Keep the dataset and labeling methodology versioned in the repository.
+Evaluation metrics
+Correlation between model score and human relevance rating.
+Ranking quality: whether strong matches appear above weak matches.
+Precision/recall or F1 for detected required skills, if a labeled skill set is available.
+Ablation analysis: remove one signal at a time and observe performance changes.
+Error analysis: inspect false positives, false negatives, and weak-evidence cases.
+Weight experiments
+Start with 30/30/20/10/10 weights.
+Test a small number of alternative weight configurations rather than brute-forcing hundreds without a rationale.
+Compare performance and interpretability.
+Document the final choice and why it was selected.
+9. Production QA Checklist
+Input & Parsing
+Valid text-based PDF uploads
+Multiple-page PDFs
+Very short resume
+Empty JD
+Very long JD
+Malformed PDF
+Image-only/scanned PDF
+Non-English or unusual characters
+Duplicate whitespace and extraction artifacts
+NLP
+Case normalization
+Stop-word behavior
+N-gram quality
+Skill aliases
+Required vs preferred terminology
+Missing keyword detection
+Weak-evidence detection
+No division-by-zero/empty-vocabulary failures
+Scoring
+Every component is 0–100
+Weights sum to 100%
+Overall score is bounded
+Score breakdown sums logically
+Identical/near-identical inputs behave sensibly
+Unrelated resume/JD does not receive an implausibly high score
+UI & Deployment
+Mobile layout
+Desktop layout
+Loading state
+Clear error messages
+No accidental resume text in analytics
+Public URL works in a clean browser session
+No secrets exposed in repository
+10. Product Analytics Specification
+Event
+When
+Purpose
+analysis_started
+User submits a valid analysis request
+Measure intent
+analysis_completed
+Full result successfully generated
+Measure successful activation
+pdf_parsing_failed
+Resume extraction fails
+Find reliability problems
+similarity_score_generated
+Similarity component is calculated
+Measure engine usage
+missing_keywords_shown
+Missing terms are rendered
+Measure recommendation surface
+improve_resume_clicked
+User opens improvement actions
+Measure value/engagement
+feedback_submitted
+User submits feedback
+Capture qualitative signal
+Recommended principle: event metadata should be minimal. Do not send raw resume text, full job descriptions, names, email addresses, phone numbers, or other unnecessary personal data.
+11. Distribution & Organic Growth Plan
+Lead with the utility, not the technology: 'Check your resume against a job before you apply.'
+Create a landing section explaining the methodology in plain English.
+Publish the GitHub repository with a reproducible experiment and screenshots.
+Share a short demo that shows a score changing after a concrete resume improvement.
+Target communities where job seekers, students, data scientists, and developers already discuss resumes and applications.
+Respect self-promotion rules and contribute useful explanations rather than dropping links repeatedly.
+Use the first user failures as content: PDF parsing edge cases, skill aliases, and why lexical similarity can mislead.
+Do not promise guaranteed ATS passage, interviews, or job offers.
+TRACTION TARGETDo not define success as 'viral'. A meaningful first milestone is 20 strangers using the product, 5 providing feedback, and 2 returning to use it again.
+12. Daily Timeboxing
+Block
+Time
+Focus
+Rule
+Build
+3–4 h
+Core implementation
+No polishing while the engine is broken
+Test
+1–1.5 h
+Unit + manual tests
+Test the failure cases you just introduced
+Document
+30–45 min
+README / methodology / commits
+Document while context is fresh
+Review
+15–30 min
+Next priorities
+Pick only the highest-impact next task
+13. Risk Register & Mitigations
+Risk
+Impact
+Mitigation
+PDF extraction fails
+High
+Use robust extraction, validate extracted text, show a clear error, and document scanned-PDF limitations.
+Similarity score feels arbitrary
+High
+Expose component scores, weights, and top reasons affecting the result.
+Keyword matching creates false positives
+High
+Normalize aliases, use n-grams/context rules, and classify weak evidence separately.
+Users mistake score for ATS prediction
+High
+Use clear naming and disclaimers; never claim ATS certainty.
+Deployment consumes sprint time
+Medium
+Deploy a minimal version on Day 4 and avoid infrastructure complexity.
+No organic traffic
+Medium
+Focus on distribution experiments and feedback rather than guaranteed traffic.
+Analytics/privacy concerns
+Medium
+Track only product events and never send raw resume/JD content.
+Scope creep
+High
+Freeze MVP features after Day 3; every new feature must justify its effect on user value or evaluation.
+14. Definition of Done
+A user can upload a text-based resume PDF.
+A user can paste a job description.
+The system returns a reproducible match score.
+The score has a visible component breakdown.
+Matched, missing, and weak terms are displayed.
+The system produces actionable improvement recommendations.
+Common parsing and input errors are handled gracefully.
+The product is deployed at a public URL.
+The repository contains setup instructions and methodology.
+Meaningful product events are tracked without unnecessary personal data.
+Real users have tested the product.
+At least one post-launch iteration is based on observed feedback or failures.
+The repository contains an experiment plan comparing baseline and hybrid approaches.
+15. Final Execution Order
+Make resume.pdf + job.txt → similarity + keywords work reliably.
+Turn the engine into a structured analysis function.
+Wrap it in Streamlit.
+Add skill and requirement intelligence.
+Deploy the minimum useful version.
+Add transparent scoring and recommendations.
+Add lightweight analytics and feedback.
+Distribute to targeted communities.
+QA with real documents.
+Run the data science experiment and document the findings.
+THE CORE PRINCIPLEDo not spend the first day making ResumeMatch beautiful. Spend the first day making it correct. A polished interface around unreliable NLP is a demo; a simple interface around a tested, explainable engine is a real Data Science project.
+Appendix A — Suggested MVP Result Schema
+{  "overall_score": 78,  "similarity": 84,  "keyword_coverage": 76,  "skills_overlap": 72,  "required_term_coverage": 81,  "experience_education_terminology": 80,  "matched": ["Python", "SQL", "Machine Learning"],  "missing": ["Power BI", "AWS", "Docker"],  "weak_evidence": [    {      "resume_term": "databases",      "job_requirement": "PostgreSQL"    }  ],  "recommendations": [    "Add PostgreSQL if genuinely used",    "Quantify internship impact",    "Add ETL experience where truthful"  ]}
+Appendix B — First 10 Tasks to Execute
+Create GitHub repository: ResumeMatch.
+Create Python virtual environment.
+Install pdfplumber, scikit-learn, and test dependencies.
+Add a sample resume PDF and sample job.txt to local test data.
+Implement PDF text extraction.
+Implement cleaning/tokenization.
+Implement TF-IDF vectors.
+Implement cosine similarity.
+Print top job-description terms and overlap with resume.
+Write the first automated test and commit the working baseline.

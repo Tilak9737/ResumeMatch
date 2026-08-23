@@ -1,0 +1,1353 @@
+{
+  "python": {
+    "canonical": "Python",
+    "category": "Programming",
+    "aliases": [
+      "python",
+      "python3"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "r": {
+    "canonical": "R",
+    "category": "Programming",
+    "aliases": [
+      "r",
+      "r programming",
+      "r language"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "java": {
+    "canonical": "Java",
+    "category": "Programming",
+    "aliases": [
+      "java"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "c++": {
+    "canonical": "C++",
+    "category": "Programming",
+    "aliases": [
+      "c++",
+      "cpp"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "c#": {
+    "canonical": "C#",
+    "category": "Programming",
+    "aliases": [
+      "c#",
+      "c-sharp",
+      "csharp"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "javascript": {
+    "canonical": "JavaScript",
+    "category": "Programming",
+    "aliases": [
+      "javascript",
+      "js"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "typescript": {
+    "canonical": "TypeScript",
+    "category": "Programming",
+    "aliases": [
+      "typescript",
+      "ts"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "go": {
+    "canonical": "Go",
+    "category": "Programming",
+    "aliases": [
+      "go",
+      "golang"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "c": {
+    "canonical": "C",
+    "category": "Programming",
+    "aliases": [
+      "c",
+      "c language"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "scala": {
+    "canonical": "Scala",
+    "category": "Programming",
+    "aliases": [
+      "scala"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "ruby": {
+    "canonical": "Ruby",
+    "category": "Programming",
+    "aliases": [
+      "ruby"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "php": {
+    "canonical": "PHP",
+    "category": "Programming",
+    "aliases": [
+      "php"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "swift": {
+    "canonical": "Swift",
+    "category": "Programming",
+    "aliases": [
+      "swift"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "kotlin": {
+    "canonical": "Kotlin",
+    "category": "Programming",
+    "aliases": [
+      "kotlin"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "rust": {
+    "canonical": "Rust",
+    "category": "Programming",
+    "aliases": [
+      "rust"
+    ],
+    "generic_parent": "Programming Language"
+  },
+  "machine learning": {
+    "canonical": "Machine Learning",
+    "category": "Data Science",
+    "aliases": [
+      "machine learning",
+      "ml"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "deep learning": {
+    "canonical": "Deep Learning",
+    "category": "Data Science",
+    "aliases": [
+      "deep learning",
+      "dl"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "natural language processing": {
+    "canonical": "Natural Language Processing",
+    "category": "Data Science",
+    "aliases": [
+      "natural language processing",
+      "nlp"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "computer vision": {
+    "canonical": "Computer Vision",
+    "category": "Data Science",
+    "aliases": [
+      "computer vision",
+      "cv"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "statistics": {
+    "canonical": "Statistics",
+    "category": "Data Science",
+    "aliases": [
+      "statistics",
+      "statistical modeling"
+    ],
+    "generic_parent": "Mathematics"
+  },
+  "data analysis": {
+    "canonical": "Data Analysis",
+    "category": "Data Science",
+    "aliases": [
+      "data analysis",
+      "data analytics"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "data visualization": {
+    "canonical": "Data Visualization",
+    "category": "Data Science",
+    "aliases": [
+      "data visualization",
+      "data viz"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "predictive modeling": {
+    "canonical": "Predictive Modeling",
+    "category": "Data Science",
+    "aliases": [
+      "predictive modeling",
+      "predictive analytics"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "regression": {
+    "canonical": "Regression",
+    "category": "Data Science",
+    "aliases": [
+      "regression",
+      "linear regression",
+      "logistic regression"
+    ],
+    "generic_parent": "Machine Learning"
+  },
+  "classification": {
+    "canonical": "Classification",
+    "category": "Data Science",
+    "aliases": [
+      "classification"
+    ],
+    "generic_parent": "Machine Learning"
+  },
+  "clustering": {
+    "canonical": "Clustering",
+    "category": "Data Science",
+    "aliases": [
+      "clustering",
+      "k-means"
+    ],
+    "generic_parent": "Machine Learning"
+  },
+  "time series": {
+    "canonical": "Time Series",
+    "category": "Data Science",
+    "aliases": [
+      "time series",
+      "time series analysis",
+      "forecasting"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "a/b testing": {
+    "canonical": "A/B Testing",
+    "category": "Data Science",
+    "aliases": [
+      "a/b testing",
+      "ab testing",
+      "hypothesis testing"
+    ],
+    "generic_parent": "Data Science"
+  },
+  "sql": {
+    "canonical": "SQL",
+    "category": "Data Engineering",
+    "aliases": [
+      "sql",
+      "structured query language"
+    ],
+    "generic_parent": "Database"
+  },
+  "etl": {
+    "canonical": "ETL",
+    "category": "Data Engineering",
+    "aliases": [
+      "etl",
+      "extract transform load",
+      "data pipelines",
+      "data pipeline"
+    ],
+    "generic_parent": "Data Engineering"
+  },
+  "data warehousing": {
+    "canonical": "Data Warehousing",
+    "category": "Data Engineering",
+    "aliases": [
+      "data warehousing",
+      "data warehouse"
+    ],
+    "generic_parent": "Data Engineering"
+  },
+  "data modeling": {
+    "canonical": "Data Modeling",
+    "category": "Data Engineering",
+    "aliases": [
+      "data modeling"
+    ],
+    "generic_parent": "Data Engineering"
+  },
+  "pandas": {
+    "canonical": "Pandas",
+    "category": "Frameworks",
+    "aliases": [
+      "pandas"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "numpy": {
+    "canonical": "NumPy",
+    "category": "Frameworks",
+    "aliases": [
+      "numpy"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "scipy": {
+    "canonical": "SciPy",
+    "category": "Frameworks",
+    "aliases": [
+      "scipy"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "matplotlib": {
+    "canonical": "Matplotlib",
+    "category": "Frameworks",
+    "aliases": [
+      "matplotlib"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "seaborn": {
+    "canonical": "Seaborn",
+    "category": "Frameworks",
+    "aliases": [
+      "seaborn"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "plotly": {
+    "canonical": "Plotly",
+    "category": "Frameworks",
+    "aliases": [
+      "plotly"
+    ],
+    "generic_parent": "Python Data Science"
+  },
+  "scikit-learn": {
+    "canonical": "Scikit-learn",
+    "category": "Frameworks",
+    "aliases": [
+      "scikit-learn",
+      "sklearn",
+      "scikit learn"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "pytorch": {
+    "canonical": "PyTorch",
+    "category": "Frameworks",
+    "aliases": [
+      "pytorch",
+      "torch"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "tensorflow": {
+    "canonical": "TensorFlow",
+    "category": "Frameworks",
+    "aliases": [
+      "tensorflow",
+      "tf"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "keras": {
+    "canonical": "Keras",
+    "category": "Frameworks",
+    "aliases": [
+      "keras"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "xgboost": {
+    "canonical": "XGBoost",
+    "category": "Frameworks",
+    "aliases": [
+      "xgboost",
+      "xgb"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "lightgbm": {
+    "canonical": "LightGBM",
+    "category": "Frameworks",
+    "aliases": [
+      "lightgbm",
+      "lgbm"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "catboost": {
+    "canonical": "CatBoost",
+    "category": "Frameworks",
+    "aliases": [
+      "catboost"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "hugging face": {
+    "canonical": "Hugging Face",
+    "category": "Frameworks",
+    "aliases": [
+      "hugging face",
+      "huggingface",
+      "transformers"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "opencv": {
+    "canonical": "OpenCV",
+    "category": "Frameworks",
+    "aliases": [
+      "opencv",
+      "cv2"
+    ],
+    "generic_parent": "Machine Learning Framework"
+  },
+  "postgresql": {
+    "canonical": "PostgreSQL",
+    "category": "Database",
+    "aliases": [
+      "postgresql",
+      "postgres",
+      "postgres db"
+    ],
+    "generic_parent": "SQL Database"
+  },
+  "mysql": {
+    "canonical": "MySQL",
+    "category": "Database",
+    "aliases": [
+      "mysql"
+    ],
+    "generic_parent": "SQL Database"
+  },
+  "mongodb": {
+    "canonical": "MongoDB",
+    "category": "Database",
+    "aliases": [
+      "mongodb",
+      "mongo"
+    ],
+    "generic_parent": "NoSQL Database"
+  },
+  "sqlite": {
+    "canonical": "SQLite",
+    "category": "Database",
+    "aliases": [
+      "sqlite"
+    ],
+    "generic_parent": "SQL Database"
+  },
+  "redis": {
+    "canonical": "Redis",
+    "category": "Database",
+    "aliases": [
+      "redis"
+    ],
+    "generic_parent": "NoSQL Database"
+  },
+  "sql server": {
+    "canonical": "SQL Server",
+    "category": "Database",
+    "aliases": [
+      "sql server",
+      "mssql",
+      "microsoft sql server"
+    ],
+    "generic_parent": "SQL Database"
+  },
+  "oracle": {
+    "canonical": "Oracle",
+    "category": "Database",
+    "aliases": [
+      "oracle db",
+      "oracle database",
+      "oracle"
+    ],
+    "generic_parent": "SQL Database"
+  },
+  "cassandra": {
+    "canonical": "Cassandra",
+    "category": "Database",
+    "aliases": [
+      "cassandra",
+      "apache cassandra"
+    ],
+    "generic_parent": "NoSQL Database"
+  },
+  "dynamodb": {
+    "canonical": "DynamoDB",
+    "category": "Database",
+    "aliases": [
+      "dynamodb"
+    ],
+    "generic_parent": "NoSQL Database"
+  },
+  "snowflake": {
+    "canonical": "Snowflake",
+    "category": "Database",
+    "aliases": [
+      "snowflake"
+    ],
+    "generic_parent": "Data Warehouse"
+  },
+  "redshift": {
+    "canonical": "Redshift",
+    "category": "Database",
+    "aliases": [
+      "redshift",
+      "amazon redshift"
+    ],
+    "generic_parent": "Data Warehouse"
+  },
+  "bigquery": {
+    "canonical": "BigQuery",
+    "category": "Database",
+    "aliases": [
+      "bigquery",
+      "google bigquery"
+    ],
+    "generic_parent": "Data Warehouse"
+  },
+  "aws": {
+    "canonical": "AWS",
+    "category": "Cloud",
+    "aliases": [
+      "aws",
+      "amazon web services"
+    ],
+    "generic_parent": "Cloud Platform"
+  },
+  "azure": {
+    "canonical": "Azure",
+    "category": "Cloud",
+    "aliases": [
+      "azure",
+      "microsoft azure"
+    ],
+    "generic_parent": "Cloud Platform"
+  },
+  "gcp": {
+    "canonical": "GCP",
+    "category": "Cloud",
+    "aliases": [
+      "gcp",
+      "google cloud platform",
+      "google cloud"
+    ],
+    "generic_parent": "Cloud Platform"
+  },
+  "ec2": {
+    "canonical": "EC2",
+    "category": "Cloud",
+    "aliases": [
+      "ec2",
+      "amazon ec2"
+    ],
+    "generic_parent": "Cloud Services"
+  },
+  "s3": {
+    "canonical": "S3",
+    "category": "Cloud",
+    "aliases": [
+      "s3",
+      "amazon s3"
+    ],
+    "generic_parent": "Cloud Services"
+  },
+  "lambda": {
+    "canonical": "Lambda",
+    "category": "Cloud",
+    "aliases": [
+      "lambda",
+      "aws lambda"
+    ],
+    "generic_parent": "Cloud Services"
+  },
+  "power bi": {
+    "canonical": "Power BI",
+    "category": "BI",
+    "aliases": [
+      "power bi",
+      "powerbi"
+    ],
+    "generic_parent": "Business Intelligence"
+  },
+  "tableau": {
+    "canonical": "Tableau",
+    "category": "BI",
+    "aliases": [
+      "tableau"
+    ],
+    "generic_parent": "Business Intelligence"
+  },
+  "looker": {
+    "canonical": "Looker",
+    "category": "BI",
+    "aliases": [
+      "looker"
+    ],
+    "generic_parent": "Business Intelligence"
+  },
+  "qlik": {
+    "canonical": "Qlik",
+    "category": "BI",
+    "aliases": [
+      "qlik",
+      "qlikview",
+      "qliksense"
+    ],
+    "generic_parent": "Business Intelligence"
+  },
+  "docker": {
+    "canonical": "Docker",
+    "category": "DevOps",
+    "aliases": [
+      "docker",
+      "containerization"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "kubernetes": {
+    "canonical": "Kubernetes",
+    "category": "DevOps",
+    "aliases": [
+      "kubernetes",
+      "k8s"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "git": {
+    "canonical": "Git",
+    "category": "DevOps",
+    "aliases": [
+      "git",
+      "version control"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "github": {
+    "canonical": "GitHub",
+    "category": "DevOps",
+    "aliases": [
+      "github"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "gitlab": {
+    "canonical": "GitLab",
+    "category": "DevOps",
+    "aliases": [
+      "gitlab"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "bitbucket": {
+    "canonical": "Bitbucket",
+    "category": "DevOps",
+    "aliases": [
+      "bitbucket"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "ci/cd": {
+    "canonical": "CI/CD",
+    "category": "DevOps",
+    "aliases": [
+      "ci/cd",
+      "ci-cd",
+      "continuous integration",
+      "continuous deployment"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "jenkins": {
+    "canonical": "Jenkins",
+    "category": "DevOps",
+    "aliases": [
+      "jenkins"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "terraform": {
+    "canonical": "Terraform",
+    "category": "DevOps",
+    "aliases": [
+      "terraform"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "ansible": {
+    "canonical": "Ansible",
+    "category": "DevOps",
+    "aliases": [
+      "ansible"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "react": {
+    "canonical": "React",
+    "category": "Frameworks",
+    "aliases": [
+      "react",
+      "react.js",
+      "reactjs"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "next.js": {
+    "canonical": "Next.js",
+    "category": "Frameworks",
+    "aliases": [
+      "next.js",
+      "nextjs"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "node.js": {
+    "canonical": "Node.js",
+    "category": "Frameworks",
+    "aliases": [
+      "node.js",
+      "nodejs",
+      "node"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "django": {
+    "canonical": "Django",
+    "category": "Frameworks",
+    "aliases": [
+      "django"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "flask": {
+    "canonical": "Flask",
+    "category": "Frameworks",
+    "aliases": [
+      "flask"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "fastapi": {
+    "canonical": "FastAPI",
+    "category": "Frameworks",
+    "aliases": [
+      "fastapi"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "spring boot": {
+    "canonical": "Spring Boot",
+    "category": "Frameworks",
+    "aliases": [
+      "spring boot",
+      "springboot",
+      "spring"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  ".net": {
+    "canonical": ".NET",
+    "category": "Frameworks",
+    "aliases": [
+      ".net",
+      "dotnet",
+      ".net core"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "vue.js": {
+    "canonical": "Vue.js",
+    "category": "Frameworks",
+    "aliases": [
+      "vue",
+      "vue.js",
+      "vuejs"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "angular": {
+    "canonical": "Angular",
+    "category": "Frameworks",
+    "aliases": [
+      "angular",
+      "angular.js"
+    ],
+    "generic_parent": "Web Framework"
+  },
+  "spark": {
+    "canonical": "Spark",
+    "category": "Big Data",
+    "aliases": [
+      "spark",
+      "apache spark",
+      "pyspark"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "hadoop": {
+    "canonical": "Hadoop",
+    "category": "Big Data",
+    "aliases": [
+      "hadoop",
+      "apache hadoop"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "kafka": {
+    "canonical": "Kafka",
+    "category": "Big Data",
+    "aliases": [
+      "kafka",
+      "apache kafka"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "airflow": {
+    "canonical": "Airflow",
+    "category": "Big Data",
+    "aliases": [
+      "airflow",
+      "apache airflow"
+    ],
+    "generic_parent": "Data Engineering"
+  },
+  "databricks": {
+    "canonical": "Databricks",
+    "category": "Big Data",
+    "aliases": [
+      "databricks"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "flume": {
+    "canonical": "Flume",
+    "category": "Big Data",
+    "aliases": [
+      "flume",
+      "apache flume"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "hive": {
+    "canonical": "Hive",
+    "category": "Big Data",
+    "aliases": [
+      "hive",
+      "apache hive"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "pig": {
+    "canonical": "Pig",
+    "category": "Big Data",
+    "aliases": [
+      "pig",
+      "apache pig"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "flink": {
+    "canonical": "Flink",
+    "category": "Big Data",
+    "aliases": [
+      "flink",
+      "apache flink"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "nifi": {
+    "canonical": "NiFi",
+    "category": "Big Data",
+    "aliases": [
+      "nifi",
+      "apache nifi"
+    ],
+    "generic_parent": "Big Data"
+  },
+  "selenium": {
+    "canonical": "Selenium",
+    "category": "Testing",
+    "aliases": [
+      "selenium",
+      "selenium webdriver"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "cypress": {
+    "canonical": "Cypress",
+    "category": "Testing",
+    "aliases": [
+      "cypress"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "jest": {
+    "canonical": "Jest",
+    "category": "Testing",
+    "aliases": [
+      "jest"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "mocha": {
+    "canonical": "Mocha",
+    "category": "Testing",
+    "aliases": [
+      "mocha"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "pytest": {
+    "canonical": "PyTest",
+    "category": "Testing",
+    "aliases": [
+      "pytest",
+      "py.test"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "junit": {
+    "canonical": "JUnit",
+    "category": "Testing",
+    "aliases": [
+      "junit"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "testng": {
+    "canonical": "TestNG",
+    "category": "Testing",
+    "aliases": [
+      "testng"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "appium": {
+    "canonical": "Appium",
+    "category": "Testing",
+    "aliases": [
+      "appium"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "cucumber": {
+    "canonical": "Cucumber",
+    "category": "Testing",
+    "aliases": [
+      "cucumber"
+    ],
+    "generic_parent": "Software Testing"
+  },
+  "linux": {
+    "canonical": "Linux",
+    "category": "OS",
+    "aliases": [
+      "linux",
+      "ubuntu",
+      "debian",
+      "centos",
+      "redhat",
+      "rhel"
+    ],
+    "generic_parent": "Operating System"
+  },
+  "windows": {
+    "canonical": "Windows",
+    "category": "OS",
+    "aliases": [
+      "windows",
+      "windows server"
+    ],
+    "generic_parent": "Operating System"
+  },
+  "macos": {
+    "canonical": "macOS",
+    "category": "OS",
+    "aliases": [
+      "macos",
+      "mac os x",
+      "osx"
+    ],
+    "generic_parent": "Operating System"
+  },
+  "unix": {
+    "canonical": "Unix",
+    "category": "OS",
+    "aliases": [
+      "unix"
+    ],
+    "generic_parent": "Operating System"
+  },
+  "bash": {
+    "canonical": "Bash",
+    "category": "OS",
+    "aliases": [
+      "bash",
+      "bash scripting",
+      "shell scripting",
+      "shell script"
+    ],
+    "generic_parent": "Scripting"
+  },
+  "powershell": {
+    "canonical": "PowerShell",
+    "category": "OS",
+    "aliases": [
+      "powershell"
+    ],
+    "generic_parent": "Scripting"
+  },
+  "digitalocean": {
+    "canonical": "DigitalOcean",
+    "category": "Cloud",
+    "aliases": [
+      "digitalocean",
+      "digital ocean"
+    ],
+    "generic_parent": "Cloud Platform"
+  },
+  "heroku": {
+    "canonical": "Heroku",
+    "category": "Cloud",
+    "aliases": [
+      "heroku"
+    ],
+    "generic_parent": "Cloud Platform"
+  },
+  "vagrant": {
+    "canonical": "Vagrant",
+    "category": "DevOps",
+    "aliases": [
+      "vagrant"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "puppet": {
+    "canonical": "Puppet",
+    "category": "DevOps",
+    "aliases": [
+      "puppet"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "chef": {
+    "canonical": "Chef",
+    "category": "DevOps",
+    "aliases": [
+      "chef"
+    ],
+    "generic_parent": "DevOps"
+  },
+  "prometheus": {
+    "canonical": "Prometheus",
+    "category": "DevOps",
+    "aliases": [
+      "prometheus"
+    ],
+    "generic_parent": "Monitoring"
+  },
+  "grafana": {
+    "canonical": "Grafana",
+    "category": "DevOps",
+    "aliases": [
+      "grafana"
+    ],
+    "generic_parent": "Monitoring"
+  },
+  "datadog": {
+    "canonical": "Datadog",
+    "category": "DevOps",
+    "aliases": [
+      "datadog"
+    ],
+    "generic_parent": "Monitoring"
+  },
+  "splunk": {
+    "canonical": "Splunk",
+    "category": "DevOps",
+    "aliases": [
+      "splunk"
+    ],
+    "generic_parent": "Monitoring"
+  },
+  "elk stack": {
+    "canonical": "ELK Stack",
+    "category": "DevOps",
+    "aliases": [
+      "elk",
+      "elk stack",
+      "elasticsearch",
+      "logstash",
+      "kibana"
+    ],
+    "generic_parent": "Monitoring"
+  },
+  "agile": {
+    "canonical": "Agile",
+    "category": "Methodology",
+    "aliases": [
+      "agile",
+      "agile methodology",
+      "scrum"
+    ],
+    "generic_parent": "Project Management"
+  },
+  "kanban": {
+    "canonical": "Kanban",
+    "category": "Methodology",
+    "aliases": [
+      "kanban"
+    ],
+    "generic_parent": "Project Management"
+  },
+  "jira": {
+    "canonical": "Jira",
+    "category": "Methodology",
+    "aliases": [
+      "jira",
+      "atlassian jira"
+    ],
+    "generic_parent": "Project Management"
+  },
+  "confluence": {
+    "canonical": "Confluence",
+    "category": "Methodology",
+    "aliases": [
+      "confluence"
+    ],
+    "generic_parent": "Project Management"
+  },
+  "trello": {
+    "canonical": "Trello",
+    "category": "Methodology",
+    "aliases": [
+      "trello"
+    ],
+    "generic_parent": "Project Management"
+  },
+  "problem solving": {
+    "canonical": "Problem Solving",
+    "category": "Soft Skills",
+    "aliases": [
+      "problem solving",
+      "problem-solving"
+    ],
+    "generic_parent": "Soft Skills"
+  },
+  "communication": {
+    "canonical": "Communication",
+    "category": "Soft Skills",
+    "aliases": [
+      "communication",
+      "communication skills"
+    ],
+    "generic_parent": "Soft Skills"
+  },
+  "teamwork": {
+    "canonical": "Teamwork",
+    "category": "Soft Skills",
+    "aliases": [
+      "teamwork",
+      "team collaboration"
+    ],
+    "generic_parent": "Soft Skills"
+  },
+  "leadership": {
+    "canonical": "Leadership",
+    "category": "Soft Skills",
+    "aliases": [
+      "leadership",
+      "team leading"
+    ],
+    "generic_parent": "Soft Skills"
+  },
+  "cybersecurity": {
+    "canonical": "Cybersecurity",
+    "category": "Security",
+    "aliases": [
+      "cybersecurity",
+      "cyber security",
+      "infosec"
+    ],
+    "generic_parent": "Information Security"
+  },
+  "penetration testing": {
+    "canonical": "Penetration Testing",
+    "category": "Security",
+    "aliases": [
+      "penetration testing",
+      "pen testing"
+    ],
+    "generic_parent": "Information Security"
+  },
+  "cryptography": {
+    "canonical": "Cryptography",
+    "category": "Security",
+    "aliases": [
+      "cryptography"
+    ],
+    "generic_parent": "Information Security"
+  },
+  "oauth": {
+    "canonical": "OAuth",
+    "category": "Security",
+    "aliases": [
+      "oauth",
+      "oauth2"
+    ],
+    "generic_parent": "Authentication"
+  },
+  "jwt": {
+    "canonical": "JWT",
+    "category": "Security",
+    "aliases": [
+      "jwt",
+      "json web token"
+    ],
+    "generic_parent": "Authentication"
+  },
+  "html": {
+    "canonical": "HTML",
+    "category": "Web",
+    "aliases": [
+      "html",
+      "html5"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "css": {
+    "canonical": "CSS",
+    "category": "Web",
+    "aliases": [
+      "css",
+      "css3"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "sass": {
+    "canonical": "SASS",
+    "category": "Web",
+    "aliases": [
+      "sass",
+      "scss"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "less": {
+    "canonical": "LESS",
+    "category": "Web",
+    "aliases": [
+      "less"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "tailwind css": {
+    "canonical": "Tailwind CSS",
+    "category": "Web",
+    "aliases": [
+      "tailwind",
+      "tailwindcss"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "bootstrap": {
+    "canonical": "Bootstrap",
+    "category": "Web",
+    "aliases": [
+      "bootstrap"
+    ],
+    "generic_parent": "Web Development"
+  },
+  "rest": {
+    "canonical": "REST",
+    "category": "Web",
+    "aliases": [
+      "rest",
+      "restful",
+      "rest api",
+      "restful api"
+    ],
+    "generic_parent": "Web Services"
+  },
+  "graphql": {
+    "canonical": "GraphQL",
+    "category": "Web",
+    "aliases": [
+      "graphql"
+    ],
+    "generic_parent": "Web Services"
+  },
+  "soap": {
+    "canonical": "SOAP",
+    "category": "Web",
+    "aliases": [
+      "soap"
+    ],
+    "generic_parent": "Web Services"
+  },
+  "websockets": {
+    "canonical": "WebSockets",
+    "category": "Web",
+    "aliases": [
+      "websockets",
+      "websocket"
+    ],
+    "generic_parent": "Web Services"
+  },
+  "android": {
+    "canonical": "Android",
+    "category": "Mobile",
+    "aliases": [
+      "android",
+      "android development"
+    ],
+    "generic_parent": "Mobile Development"
+  },
+  "ios": {
+    "canonical": "iOS",
+    "category": "Mobile",
+    "aliases": [
+      "ios",
+      "ios development"
+    ],
+    "generic_parent": "Mobile Development"
+  },
+  "react native": {
+    "canonical": "React Native",
+    "category": "Mobile",
+    "aliases": [
+      "react native"
+    ],
+    "generic_parent": "Mobile Development"
+  },
+  "flutter": {
+    "canonical": "Flutter",
+    "category": "Mobile",
+    "aliases": [
+      "flutter"
+    ],
+    "generic_parent": "Mobile Development"
+  },
+  "dart": {
+    "canonical": "Dart",
+    "category": "Programming",
+    "aliases": [
+      "dart"
+    ],
+    "generic_parent": "Programming Language"
+  }
+}
