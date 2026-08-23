@@ -1,0 +1,61 @@
+# 🟢 Day 4 Deployment Readiness Complete
+
+The codebase has been audited and prepared for Day 4 deployment as per the implementation plan. 
+
+> [!IMPORTANT]
+> The most important Day 4 deliverable — the public deployment — hasn't happened yet.
+> Once the URL works and survives the QA checklist, tag it and freeze it. Then we move to Day 5.
+
+## Verified Release Pre-requisites
+
+1.  **Fresh-environment Reproducibility**
+    *   Clean `.venv-clean` environment created.
+    *   Dependencies from `requirements.txt` and `requirements-dev.txt` installed flawlessly.
+    *   Test suite passed with ~94% coverage across 35 tests.
+    *   *Python Version verified: Python 3.12.1*
+
+2.  **Git Repository Audit**
+    *   `git ls-files` and `git status` confirmed no tracked `.env`, `.venv`, `.pytest_cache`, `data/user_uploads`, `__pycache__`, or debug files.
+    *   No secrets, API keys, or tokens leaked.
+
+3.  **Documentation & Methodology**
+    *   Updated `README.md` to clearly explain the **Day 4 Provisional Model** and specify the 10% Experience/Education component as `[Deferred]`.
+    *   Confirmed active score normalizes over 90%.
+
+4.  **Privacy Audit**
+    *   Checked `src/logging_config.py` and application logging.
+    *   No extracted resume text (PII) is logged. Logging only records metadata (e.g., character counts and status events).
+
+## Your Release Sequence
+
+Please complete these manual steps to achieve **Day 4 Complete**:
+
+1. **Push GitHub (COMPLETED ✅)**
+   * Code successfully pushed to `https://github.com/Tilak9737/ResumeMatch.git` on the `main` branch.
+2. **Deploy Streamlit**
+   * Link repo on Streamlit Community Cloud and select `app.py`. Configure the deployed Python version explicitly to match the tested environment (`Python 3.12.1`) where supported, and verify the actual runtime from the deployment logs.
+3. **Cloud startup verified**
+   * Check deployment logs for any missing files or dependency conflicts.
+4. **Public URL**
+5. **Production QA** (From an *Incognito* Window):
+   * Test a normal resume.
+   * Refresh and run again.
+   * Test a 2-3 page resume.
+   * Test a multi-column PDF (ensure text isn't scrambled).
+   * Test a C++/C#/.NET resume.
+   * Test empty, corrupt, or scanned PDFs to verify controlled errors.
+6. **Privacy verification**
+   * Double-check app logs in Streamlit dashboard (no resume text dumped).
+7. **Deployment logs clean**
+8. **Save a deployment snapshot** (Add this to your documentation):
+   * Public URL:
+   * Deployed commit hash:
+   * Python version:
+   * Package versions:
+   * Deployment date:
+   * Initial Streamlit viewer count:
+9. **Release Tagging**
+   ```bash
+   git tag v0.4.0-day4-deployed
+   git push --tags
+   ```
