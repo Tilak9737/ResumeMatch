@@ -1,0 +1,57 @@
+# 🚀 ResumeMatch Day 4 — Deployment Walkthrough
+
+> [!TIP]
+> **Deployment Mission Accomplished**
+> Day 4 marks the transition from local development to a live, production-grade application. The NLP engine built over Days 1-3 is now successfully hosted on the cloud, validated against real-world data, and strictly privacy-compliant.
+
+## 🌐 Deployment Details
+
+| Component | Information |
+| :--- | :--- |
+| **Public URL** | [https://resumematch-nlp.streamlit.app](https://resumematch-nlp.streamlit.app) |
+| **Repository** | [https://github.com/Tilak9737/ResumeMatch](https://github.com/Tilak9737/ResumeMatch) |
+| **Platform** | Streamlit Community Cloud |
+| **Runtime** | Python 3.12.x |
+
+> **Deployment Result:** Production application started successfully, bound to the specified Python 3.12 runtime, and processed real PDF analyses gracefully.
+
+---
+
+## ✅ Production QA Matrix
+
+The deployed application was smoke-tested from a completely isolated incognito environment to verify the integrity of the extraction and scoring pipelines.
+
+| Test Case | Expected Behavior | Result |
+| :--- | :--- | :---: |
+| **Normal 1-page resume** | Successful extraction and scoring | 🟢 PASS |
+| **3-page resume** | Successful extraction | 🟢 PASS |
+| **Multi-column PDF** | Successful extraction despite layout | 🟢 PASS |
+| **Corrupt PDF** | Graceful, controlled error message | 🟢 PASS |
+| **Scanned / Image-only PDF** | Graceful, controlled error message | 🟢 PASS |
+| **Fresh Session / State Isolation** | State is perfectly isolated across users | 🟢 PASS |
+
+---
+
+## 🔬 Observed Day 4 Findings
+
+### Lexical Dilution in TF-IDF
+
+During production testing, we ran identical job descriptions against two variants of the same resume:
+*   Original 1-page CV → **18.8%** TF-IDF Similarity
+*   Expanded 3-page CV → **17.2%** TF-IDF Similarity
+
+> [!NOTE]
+> **Observation:** Longer documents do not necessarily produce higher TF-IDF similarity. Additional vocabulary and text bulk can actually *dilute* lexical alignment by increasing document length without proportionally increasing relevant keyword matches. 
+> 
+> *This is a critical finding that validates our decision to use a multi-faceted Provisional Score rather than relying entirely on TF-IDF.*
+
+### 🛡️ Privacy Verification
+
+A complete audit of the live Streamlit logs verified that our privacy promises are upheld in production. 
+
+> [!IMPORTANT]
+> **Privacy Audit:** Production logs successfully recorded extraction metadata (e.g., character counts and pipeline status events), but **no extracted resume text or PII** was dumped to the logs.
+
+---
+
+*End of Day 4. The backend architecture and scoring methodology are officially frozen.*
