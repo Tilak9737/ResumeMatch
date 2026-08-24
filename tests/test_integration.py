@@ -15,7 +15,7 @@ def test_full_pipeline_with_real_pdf_mocked(monkeypatch):
     
     # Mock PDF extraction to return specific string and page count
     def mock_extract(path):
-        return "Experienced with Python, PostgreSQL, AWS, and Docker. I have a lot of experience doing things. This is extra text to ensure the resume is long enough to pass validation.", 1
+        return "Experience: Experienced with Python, PostgreSQL, AWS, and Docker. I have a lot of experience doing things. This is extra text to ensure the resume is long enough to pass validation.", 1
     
     monkeypatch.setattr('src.analysis.extract_text_from_pdf', mock_extract)
     monkeypatch.setattr('src.analysis.validate_pdf', lambda x: [])
@@ -53,4 +53,4 @@ def test_full_pipeline_with_real_pdf_mocked(monkeypatch):
     
     assert "Python" in res.matched_skills
     assert "Docker" in res.matched_skills
-    assert "SQL" in res.missing_skills
+    assert "SQL" in res.weak_evidence

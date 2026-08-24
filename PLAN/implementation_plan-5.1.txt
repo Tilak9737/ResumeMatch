@@ -1,0 +1,353 @@
+# Day 5.1: Final Polish & QA Plan
+
+## Objective
+Finalize Day 5 by executing the explicit polish pass requested. This iteration focuses on correcting the evidence-classification logic, improving recommendation UX, resolving state collisions in the Example flow, applying targeted CSS for layout and typography, and establishing rigorous test fixtures.
+
+## Proposed Changes
+
+### Phase 1: Correctness (Evidence Classifier & Testing)
+We must fix the underlying evidence classifier so it intelligently distinguishes between "No evidence", "Weak evidence (e.g., educational/related terms)", and "Explicit experience."
+- **Backend Model:** Extend `AnalysisResult` and `Recommendation` to track `evidence_source` and `evidence_level`.
+- **Logic Fix:** Ensure a missing required skill defaults to `MISSING`. Adjust the classifier so educational coursework triggers `WEAK EVIDENCE` rather than `MATCHED`.
+- **Testing:** Build strict, deterministic test fixtures (`tests/fixtures/resume_data_analyst.txt`, etc.). Add explicit PDF parser tests for corrupt, empty, and malformed files.
+
+### Phase 2: State & Product Behavior
+- **State Collision:** When "Try an example" is active, explicitly disable or clear the PDF uploader to prevent user confusion. Clearly label "Resume source: Example resume".
+- **Reset Flow:** Add a "Start a new analysis" button that entirely resets `st.session_state` (clears file, JD, result, feedback, example mode, errors).
+
+### Phase 3: Recommendation UX
+- **Recommendation Cap:** Cap the displayed recommendations: max 2 High, 3 Medium, 2 Low impact items. Provide a "Show all X recommendations" toggle if the list exceeds the cap.
+- **Wording:** Overhaul the recommendation text to explain the evidence state (e.g., `Python — Required · Missing. Add Python evidence if you have genuinely used it...`).
+
+### Phase 4: CSS Polish & Typography
+- **CSS Injection:** Target max-width (760-900px) to prevent excessive horizontal stretching. Enhance section spacing, line heights, and heading weights for a true editorial report feel.
+- **Feedback UI:** Use CSS to force the `👍 Yes` and `👎 No` buttons into a clean, horizontal layout. Ensure the multiselect reason form only appears *after* the user clicks "No".
+- **Model Limitations Section:** Append the honest disclaimer ("ResumeMatch currently evaluates textual similarity...") at the bottom of the report.
+
+## Phase 5: Verification Plan & Final QA
+- Run `pytest --cov=src tests/` targeting the 39 existing tests + new fixture tests + PDF parser tests. 
+- Manually verify the Python/ML classifications, the reset button, the CSS layout, and the feedback buttons.
+
+
+What I would change before implementation
+1. Don't make evidence_source part of Recommendation unless needed
+
+This is good:
+
+Extend AnalysisResult and Recommendation to track evidence_source and evidence_level.
+
+But I'd make the underlying evidence model the source of truth.
+
+Conceptually:
+
+Requirement
+├── requirement_type
+├── evidence_level
+├── evidence_source
+└── matched_text / signal
+
+Then recommendations should consume that evidence, rather than independently deciding whether something is missing/weak/matched.
+
+That prevents this kind of drift:
+
+Backend → Python = MISSING
+Recommendation engine → Python = WEAK
+UI → Python = High
+
+You want:
+
+Backend evidence
+       ↓
+Recommendation
+       ↓
+UI
+
+One source of truth.
+
+2. Be careful with "coursework = weak"
+
+I agree with the direction, but don't hard-code:
+
+educational coursework → WEAK
+
+as a universal rule.
+
+The important distinction is:
+
+Explicit practical experience → MATCHED
+
+Coursework / academic mention → WEAK
+
+No evidence → MISSING
+
+That is much safer.
+
+For your current example, if Machine Learning only appears through coursework, it should not automatically be treated as equivalent to professional/project experience.
+
+Likewise, if Python appears nowhere meaningful, it should be MISSING, not weak.
+
+3. Don't "disable" the uploader literally
+
+This part:
+
+explicitly disable or clear the PDF uploader
+
+I'd change slightly.
+
+A disabled uploader can make the UI feel broken.
+
+Better:
+
+Example mode
+Resume source
+Example resume
+
+[ Replace with your own PDF ]
+
+When the user chooses the example:
+
+Resume source: Example resume
+
+and the example becomes the active input.
+
+Then provide:
+
+Use my own resume instead
+
+That creates a clean state transition rather than a disabled control.
+
+4. Reset should not blindly wipe all session_state
+
+This is a small but important implementation detail.
+
+Don't do something like:
+
+st.session_state.clear()
+
+because that can accidentally remove unrelated Streamlit state.
+
+Instead explicitly reset the application's keys:
+
+resume_file
+job_description
+analysis_result
+example_mode
+feedback
+analysis_error
+...
+
+This makes the reset behavior deterministic and safer.
+
+5. Recommendation cap — yes, but preserve priority
+
+Your:
+
+2 High + 3 Medium + 2 Low
+
+is excellent.
+
+I'd make the ordering deterministic:
+
+High
+  ↓
+Required + Missing
+  ↓
+Required + Weak
+
+Medium
+  ↓
+Preferred + Missing
+
+Low
+  ↓
+General terminology
+
+Within each category, use a deterministic ordering as well.
+
+That means the same resume/JD produces the same recommendation ordering.
+
+Very important for testing.
+
+6. One UX change I'd add
+
+Instead of:
+
+Show all X recommendations
+
+I'd use:
+
+Show X more
+
+Much cleaner.
+
+For example:
+
+What should I change?
+
+🔴 Python — Required · Missing
+🔴 Statistics — Required · Missing
+
+🟡 AWS — Preferred · Missing
+🟡 Docker — Preferred · Missing
+🟡 Tableau — Preferred · Missing
+
+Show 5 more
+
+That's much more editorial.
+
+7. CSS section is exactly right — keep it
+
+Yes, use CSS.
+
+But keep the scope exactly as you've written it:
+
+max-width
+spacing
+typography
+line-height
+button layout
+responsive behavior
+
+No:
+
+glassmorphism
+gradients
+animated cards
+giant score cards
+excessive shadows
+"AI" visual effects
+
+The screenshots you shared already show that the native editorial direction is working. CSS should make it more consistent, not make it look like a different product.
+
+8. Add one missing QA requirement: score invariance
+
+You already say:
+
+No existing scoring behavior changes.
+
+I'd make this explicit as a test.
+
+For a known fixture:
+
+resume + JD
+        ↓
+Day 4 score = X
+        ↓
+Day 5.1 score = X
+
+Evidence improvements should not accidentally change the provisional scoring model unless the existing scoring implementation explicitly depends on the corrected evidence classification.
+
+This is especially important because you're touching the backend model.
+
+9. Add a "golden fixture"
+
+I'd make one fixture the canonical ResumeMatch regression case:
+
+tests/fixtures/
+├── resume_data_analyst.txt
+├── jd_data_scientist.txt
+└── expected_data_analyst_result.json
+
+Then test:
+
+score
+keyword coverage
+TF-IDF similarity
+skills overlap
+required coverage
+matched skills
+weak evidence
+missing skills
+recommendations
+recommendation ordering
+
+That gives you a golden test case.
+
+It's much stronger than just saying "39 tests passed."
+
+10. Add the production smoke test
+
+Your verification plan is good, but because this is already deployed, add:
+
+Production QA
+Open public Streamlit URL in incognito.
+Run example flow.
+Run real PDF.
+Run malformed PDF.
+Confirm no stale session state.
+Confirm feedback interaction.
+Confirm report renders from top to bottom.
+Confirm production logs contain safe analytics only.
+
+That closes the loop between:
+
+pytest passes
+
+and
+
+the actual public product works.
+
+My final approved version
+
+I'd tell the implementation model:
+
+Implement Day 5.1 exactly in this order:
+
+1. Evidence correctness
+
+Establish one authoritative evidence model.
+Distinguish MATCHED, WEAK, and MISSING.
+Explicit practical evidence = MATCHED.
+Academic/coursework/indirect evidence = WEAK where applicable.
+No evidence = MISSING.
+Recommendations consume this model; they must not independently reclassify evidence.
+
+2. State
+
+Make Example mode an explicit active input source.
+Prevent uploaded PDF and example resume from being simultaneously active.
+Add "Use my own resume instead".
+Add a safe explicit reset/new-analysis flow.
+
+3. Recommendations
+
+High: max 2.
+Medium: max 3.
+Low: max 2.
+Deterministic ordering.
+Evidence-backed wording.
+"Show X more" for remaining recommendations.
+
+4. CSS
+
+Use a minimal targeted CSS layer.
+Constrain report width to approximately 760–900px.
+Improve typography, whitespace, line-height and responsive layout.
+Fix feedback buttons to remain horizontal.
+Do not introduce cards, gradients, glassmorphism, animations, or excessive decoration.
+
+5. Limitations
+
+Add the transparent model-limitations statement.
+
+6. Testing
+
+Preserve existing score behavior.
+Add deterministic golden fixture.
+Add evidence classification tests.
+Add recommendation ordering/cap tests.
+Add example-state tests.
+Add reset-state tests.
+Add PDF failure tests.
+Add feedback tests.
+Add analytics privacy tests.
+
+7. Production QA
+
+Run the complete test suite.
+Test the deployed application in incognito.
+Verify example → analysis → reset → new analysis.
+Verify real PDF → analysis.
+Verify malformed PDF → controlled error.
+Verify feedback.
+Verify privacy-safe logs.

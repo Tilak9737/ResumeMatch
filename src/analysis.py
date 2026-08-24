@@ -1,16 +1,16 @@
 import os
+import time
 from .models import AnalysisResult
 from .validation import validate_pdf, validate_texts
 from .parser import extract_text_from_pdf
 from .preprocess import clean_text
-from .similarity import calculate_cosine_similarity
 from .keywords import extract_top_keywords
-from .scoring import calculate_similarity_score, calculate_match_score
-from .skills import load_skills_dict, extract_skills
+from .similarity import calculate_cosine_similarity
+from .skills import load_skills_dict, extract_skills_with_evidence
 from .requirements import get_required_preferred_terms
-from .recommendations import generate_recommendations
+from .recommendations import generate_evidence_and_recommendations
+from .scoring import calculate_match_score
 from .logging_config import logger
-import time
 from .analytics import log_analysis_started, log_analysis_completed, log_analysis_failed
 
 def analyze_resume_match(resume_pdf_path: str = None, jd_text: str = "", resume_text: str = None) -> AnalysisResult:
@@ -51,80 +51,80 @@ def analyze_resume_match(resume_pdf_path: str = None, jd_text: str = "", resume_
     resume_clean = clean_text(resume_raw)
     job_clean = clean_text(jd_text)
     
-    # 5. Math & Similarity
-    similarity = calculate_cosine_similarity(resume_clean, job_clean)
+    # 5. Keyword Coverage
+    resume_kws = extract_top_keywords(resume_clean)
+    job_kws = extract_top_keywords(job_clean)
+    matched_kws = list(set(resume_kws) & set(job_kws))
+    missing_kws = list(set(job_kws) - set(resume_kws))
+    kw_cov = (len(matched_kws) / len(job_kws) * 100) if job_kws else 100.0
     
-    # 6. Keywords
-    resume_keywords = extract_top_keywords(resume_clean)
-    job_keywords = extract_top_keywords(job_clean)
+    # 6. Semantic Similarity
+    sim_score = calculate_cosine_similarity(resume_clean, job_clean)
     
-    matched_kws = list(set(resume_keywords) & set(job_keywords))
-    missing_kws = list(set(job_keywords) - set(resume_keywords))
-    keyword_cov = (len(matched_kws) / len(job_keywords) * 100) if job_keywords else 100.0
+    # 7. Skills & Evidence Extraction
+    skills_dict = load_skills_dict()
+    resume_skills_evidence = extract_skills_with_evidence(resume_clean, skills_dict)
+    resume_skills_canonical = [e.skill for e in resume_skills_evidence]
+    job_skills_canonical = extract_skills_with_evidence(job_clean, skills_dict)
+    job_skills_canonical = [e.skill for e in job_skills_canonical]
     
-    # 7. Day 3: NLP Intelligence (Skills & Requirements)
-    try:
-        skills_dict = load_skills_dict()
-    except FileNotFoundError:
-        skills_dict = {}
-        logger.warning("skills.json not found, skill matching will be empty.")
-        
-    resume_skills = extract_skills(resume_clean, skills_dict)
-    job_skills = extract_skills(job_clean, skills_dict)
+    # 8. Requirements Analysis
+    req_pref = get_required_preferred_terms(jd_text, skills_dict)
+    reqs = {"required": req_pref["required_terms"], "preferred": req_pref["preferred_terms"]}
     
-    req_pref = get_required_preferred_terms(jd_text, skills_dict) # Passing raw jd_text for sentence splitting
-    req_terms = req_pref["required_terms"]
-    pref_terms = req_pref["preferred_terms"]
+    # 9. Evidence & Recommendations
+    rec_results = generate_evidence_and_recommendations(
+        resume_skills_evidence=resume_skills_evidence,
+        job_required_skills=reqs["required"],
+        job_preferred_skills=reqs["preferred"],
+        skills_dict=skills_dict,
+        missing_kws=missing_kws
+    )
     
-    recs_output = generate_recommendations(resume_skills, req_terms, pref_terms, skills_dict, missing_kws)
+    # 10. Provisional Scoring
+    evidence = rec_results["evidence"]
+    matched_skills = [e.skill for e in evidence if e.evidence_level == "MATCHED"]
     
     # Calculate coverage
-    skills_cov = (len(recs_output["matched_skills"]) / len(job_skills) * 100) if job_skills else 100.0
+    matched_req = [s for s in reqs["required"] if s in resume_skills_canonical]
+    req_cov = (len(matched_req) / len(reqs["required"]) * 100) if reqs["required"] else 100.0
+    matched_skills_cov = (len(matched_skills) / len(job_skills_canonical) * 100) if job_skills_canonical else 100.0
     
-    matched_req = [s for s in req_terms if s in resume_skills]
-    req_cov = (len(matched_req) / len(req_terms) * 100) if req_terms else 100.0
-    
-    # Calculate provisional score
     prov_score = calculate_match_score(
-        similarity=similarity,
-        keyword_coverage=keyword_cov,
-        skills_overlap=skills_cov,
+        similarity=sim_score,
+        keyword_coverage=kw_cov,
+        skills_overlap=matched_skills_cov,
         required_term_coverage=req_cov
     )
     
-    logger.info("Analysis flow completed successfully")
-    duration_ms = int((time.time() - start_time) * 1000)
-    
-    recs = recs_output["recommendations"]
-    high_impact = sum(1 for r in recs if r.impact == "HIGH")
-    medium_impact = sum(1 for r in recs if r.impact == "MEDIUM")
+    # Track metrics
+    high_impact_count = sum(1 for r in rec_results["recommendations"] if r.impact == "HIGH")
+    medium_impact_count = sum(1 for r in rec_results["recommendations"] if r.impact == "MEDIUM")
     
     log_analysis_completed(
-        duration_ms=duration_ms,
+        duration_ms=int((time.time() - start_time) * 1000),
         resume_page_count=resume_page_count,
-        recommendation_count=len(recs),
-        high_impact_count=high_impact,
-        medium_impact_count=medium_impact
+        recommendation_count=len(rec_results["recommendations"]),
+        high_impact_count=high_impact_count,
+        medium_impact_count=medium_impact_count
     )
     
     return AnalysisResult(
-        similarity_score=similarity, # Still returning raw similarity for reference
+        similarity_score=sim_score,
         resume_text_length=len(resume_raw),
         job_text_length=len(jd_text),
         resume_page_count=resume_page_count,
-        keywords=job_keywords,
+        keywords=job_kws,
         matched_keywords=matched_kws,
         missing_keywords=missing_kws,
-        keyword_coverage=keyword_cov,
+        keyword_coverage=kw_cov,
         
         provisional_score=prov_score,
-        resume_skills=resume_skills,
-        job_skills=job_skills,
-        matched_skills=recs_output["matched_skills"],
-        missing_skills=recs_output["missing_skills"],
-        weak_evidence=recs_output["weak_evidence"],
-        required_terms=req_terms,
-        preferred_terms=pref_terms,
+        resume_skills=resume_skills_canonical,
+        job_skills=job_skills_canonical,
+        evidence=evidence,
+        required_terms=reqs["required"],
+        preferred_terms=reqs["preferred"],
         required_term_coverage=req_cov,
-        recommendations=recs
+        recommendations=rec_results["recommendations"]
     )

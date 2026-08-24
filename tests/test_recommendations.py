@@ -18,7 +18,7 @@ def test_generate_recommendations():
     # Python should match
     assert "Python" in res["matched_skills"]
     
-    # PostgreSQL is required, but resume has MySQL (same parent). So it's Weak Evidence.
+    # PostgreSQL is required, resume has MySQL (same parent). Under Day 5 rules indirect matches are always WEAK.
     assert "PostgreSQL" in res["weak_evidence"]
     assert "PostgreSQL" not in res["missing_skills"]
     

@@ -1,0 +1,17 @@
+Junior Data Scientist
+
+Required Skills:
+- Python
+- SQL
+- Data Analysis
+- Machine Learning
+- Git
+- REST APIs
+
+Preferred Skills:
+- Docker
+- AWS
+- Scikit-learn
+- CI/CD
+
+We are looking for an analytical thinker who can help us make sense of our data and build AI applications.

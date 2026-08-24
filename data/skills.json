@@ -255,7 +255,7 @@
       "sql",
       "structured query language"
     ],
-    "generic_parent": "Database"
+    "generic_parent": "SQL Database"
   },
   "etl": {
     "canonical": "ETL",

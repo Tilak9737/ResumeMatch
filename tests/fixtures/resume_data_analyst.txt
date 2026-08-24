@@ -1,0 +1,13 @@
+Data Analyst
+Skills: Python, MySQL, Data Analysis, Power BI, Statistics.
+
+Experience:
+- Analyzed large datasets using Python and pandas.
+- Maintained MySQL databases and wrote complex queries.
+- Built interactive dashboards.
+- Utilized Git for version control.
+- Designed REST APIs.
+
+Education:
+- Master of Science in Data Science
+- Coursework: Machine Learning, Foundations of AI.
