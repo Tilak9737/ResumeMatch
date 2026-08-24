@@ -13,9 +13,9 @@ def test_full_pipeline_with_dummy_pdf(tmp_path):
 def test_full_pipeline_with_real_pdf_mocked(monkeypatch):
     from src.analysis import extract_text_from_pdf
     
-    # Mock PDF extraction to return specific string
+    # Mock PDF extraction to return specific string and page count
     def mock_extract(path):
-        return "Experienced with Python, PostgreSQL, AWS, and Docker. I have a lot of experience doing things. This is extra text to ensure the resume is long enough to pass validation."
+        return "Experienced with Python, PostgreSQL, AWS, and Docker. I have a lot of experience doing things. This is extra text to ensure the resume is long enough to pass validation.", 1
     
     monkeypatch.setattr('src.analysis.extract_text_from_pdf', mock_extract)
     monkeypatch.setattr('src.analysis.validate_pdf', lambda x: [])

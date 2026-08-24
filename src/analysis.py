@@ -10,28 +10,40 @@ from .skills import load_skills_dict, extract_skills
 from .requirements import get_required_preferred_terms
 from .recommendations import generate_recommendations
 from .logging_config import logger
+import time
+from .analytics import log_analysis_started, log_analysis_completed, log_analysis_failed
 
-def analyze_resume_match(resume_pdf_path: str, jd_text: str) -> AnalysisResult:
+def analyze_resume_match(resume_pdf_path: str = None, jd_text: str = "", resume_text: str = None) -> AnalysisResult:
     logger.info("Starting analysis flow")
+    log_analysis_started()
+    start_time = time.time()
     
-    # 1. Validate PDF
-    pdf_errors = validate_pdf(resume_pdf_path)
-    if pdf_errors:
-        return AnalysisResult(similarity_score=0.0, resume_text_length=0, job_text_length=0, errors=pdf_errors)
-        
-    # 2. Extract Text
-    try:
-        resume_raw = extract_text_from_pdf(resume_pdf_path)
-    except Exception as e:
-        return AnalysisResult(similarity_score=0.0, resume_text_length=0, job_text_length=0, errors=[f"PDF Extraction failed: {str(e)}"])
+    if resume_text is not None:
+        resume_raw = resume_text
+        resume_page_count = 1
+    else:
+        # 1. Validate PDF
+        pdf_errors = validate_pdf(resume_pdf_path)
+        if pdf_errors:
+            log_analysis_failed("validation")
+            return AnalysisResult(similarity_score=0.0, resume_text_length=0, job_text_length=0, errors=pdf_errors)
+            
+        # 2. Extract Text
+        try:
+            resume_raw, resume_page_count = extract_text_from_pdf(resume_pdf_path)
+        except Exception as e:
+            log_analysis_failed("parsing")
+            return AnalysisResult(similarity_score=0.0, resume_text_length=0, job_text_length=0, errors=[f"PDF Extraction failed: {str(e)}"])
         
     # 3. Validate Texts
     text_errors = validate_texts(resume_raw, jd_text)
     if text_errors:
+        log_analysis_failed("validation")
         return AnalysisResult(
             similarity_score=0.0,
             resume_text_length=len(resume_raw) if resume_raw else 0,
             job_text_length=len(jd_text) if jd_text else 0,
+            resume_page_count=resume_page_count if 'resume_page_count' in locals() else None,
             errors=text_errors
         )
         
@@ -64,7 +76,7 @@ def analyze_resume_match(resume_pdf_path: str, jd_text: str) -> AnalysisResult:
     req_terms = req_pref["required_terms"]
     pref_terms = req_pref["preferred_terms"]
     
-    recs_output = generate_recommendations(resume_skills, req_terms, pref_terms, skills_dict)
+    recs_output = generate_recommendations(resume_skills, req_terms, pref_terms, skills_dict, missing_kws)
     
     # Calculate coverage
     skills_cov = (len(recs_output["matched_skills"]) / len(job_skills) * 100) if job_skills else 100.0
@@ -81,10 +93,25 @@ def analyze_resume_match(resume_pdf_path: str, jd_text: str) -> AnalysisResult:
     )
     
     logger.info("Analysis flow completed successfully")
+    duration_ms = int((time.time() - start_time) * 1000)
+    
+    recs = recs_output["recommendations"]
+    high_impact = sum(1 for r in recs if r.impact == "HIGH")
+    medium_impact = sum(1 for r in recs if r.impact == "MEDIUM")
+    
+    log_analysis_completed(
+        duration_ms=duration_ms,
+        resume_page_count=resume_page_count,
+        recommendation_count=len(recs),
+        high_impact_count=high_impact,
+        medium_impact_count=medium_impact
+    )
+    
     return AnalysisResult(
         similarity_score=similarity, # Still returning raw similarity for reference
         resume_text_length=len(resume_raw),
         job_text_length=len(jd_text),
+        resume_page_count=resume_page_count,
         keywords=job_keywords,
         matched_keywords=matched_kws,
         missing_keywords=missing_kws,
@@ -99,5 +126,5 @@ def analyze_resume_match(resume_pdf_path: str, jd_text: str) -> AnalysisResult:
         required_terms=req_terms,
         preferred_terms=pref_terms,
         required_term_coverage=req_cov,
-        recommendations=recs_output["recommendations"]
+        recommendations=recs
     )

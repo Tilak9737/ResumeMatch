@@ -13,7 +13,7 @@ def test_generate_recommendations():
     job_required = ["Python", "PostgreSQL", "Docker"]
     job_preferred = []
     
-    res = generate_recommendations(resume_skills, job_required, job_preferred, skills_dict)
+    res = generate_recommendations(resume_skills, job_required, job_preferred, skills_dict, [])
     
     # Python should match
     assert "Python" in res["matched_skills"]
@@ -25,3 +25,9 @@ def test_generate_recommendations():
     # Docker is required, resume has nothing related. Missing.
     assert "Docker" in res["missing_skills"]
     assert "Docker" not in res["weak_evidence"]
+    
+    # Verify recommendation impacts
+    recs = res["recommendations"]
+    high_impact_actions = [r.action for r in recs if r.impact == "HIGH"]
+    assert "Add PostgreSQL explicitly" in high_impact_actions
+    assert "Add Docker" in high_impact_actions

@@ -1,0 +1,41 @@
+# DAY 5: PRODUCT INTELLIGENCE & UI REDESIGN
+
+## 1. Editorial UI
+- **Theme:** "Quietly competent", minimal analytical career-tool UI. Background: warm/off-white. Cards: white, thin borders, no shadows. Text: charcoal. Accent: restrained indigo/green.
+- **Copy:** Restrained, credible, devoid of "AI magic" buzzwords. Generous whitespace for hierarchy instead of rounded rectangle boxes everywhere.
+
+## 2. Friction-free Example
+- **Clean Input State:** Simple upload and paste areas.
+- **"Try an example" Flow:** Prominent button to pre-load a Data Analyst resume and Junior Data Scientist JD. It will *not* automatically analyze. Instead, it populates the text fields so the user clearly sees what is happening and clicks "Analyze" themselves.
+
+## 3. Transparent Product Report
+- **Overall Score:** Match percentage with a human-readable qualitative descriptor (e.g. "Good alignment").
+- **Transparency Notice:** State explicitly: *"Based on 90% of the planned scoring framework. Experience/Education analysis is not yet active."*
+- **Human Explanation:** Plain-text summary before any math.
+- **Score Breakdown:** Visual bars for components. An expander clearly shows the formula: `(30 × Keyword Coverage + 30 × TF-IDF Similarity + 20 × Skills Overlap + 10 × Required-Term Coverage) / 90`
+- **Evidence:** Grouped into MATCHED (✓), WEAK EVIDENCE (◐), and MISSING (×).
+
+## 4. Evidence-based Recommendations
+Priority must be determined from requirement classification and evidence strength, not merely from the lowest numerical score. Every recommendation must be traceable.
+- **[🔴 High]:** Required + Missing OR Required + Weak Evidence.
+- **[🟡 Medium]:** Preferred + Missing.
+- **[⚪ Low]:** General terminology improvement.
+
+## 5. Feedback
+- Minimalist component: "Was this analysis useful? 👍 Yes / 👎 No". Optional structured reasons and comment box if 'No'.
+
+## 6. Privacy-safe Instrumentation
+- Structured JSON logging to stdout (Streamlit logs). Strictly NO user IP, email, filenames, resume text, or JD text.
+- **Events:** `analysis_started`, `analysis_completed`, `analysis_failed` (with `failure_stage: "validation" | "parsing" | "nlp" | "scoring"`), `example_loaded`, `recommendations_shown`, `feedback_submitted`.
+- **Metadata:** `analysis_duration_ms`, `recommendation_count`, `high_impact_count`, `medium_impact_count`, `resume_page_count`.
+
+## 7. Regression Gate
+Day 5 is complete only when:
+- All 35 Day 1–4 tests pass (~94% coverage).
+- No existing scoring behavior changes unintentionally.
+- Example analysis produces a deterministic expected result.
+- Every displayed metric matches AnalysisResult.
+- Recommendations match backend evidence classifications.
+- Analytics events contain no resume/JD content or PII.
+- Feedback submission works.
+- No new Streamlit exceptions occur.

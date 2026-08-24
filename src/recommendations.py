@@ -1,4 +1,6 @@
-def generate_recommendations(resume_skills: list[str], job_required_skills: list[str], job_preferred_skills: list[str], skills_dict: dict) -> dict:
+from .models import Recommendation
+
+def generate_recommendations(resume_skills: list[str], job_required_skills: list[str], job_preferred_skills: list[str], skills_dict: dict, missing_kws: list[str]) -> dict:
     """
     Compares resume skills against job requirements to produce:
     - matched_skills
@@ -15,7 +17,7 @@ def generate_recommendations(resume_skills: list[str], job_required_skills: list
     matched = []
     missing = []
     weak = []
-    recs = []
+    recs: list[Recommendation] = []
     
     # Check Required Skills
     for skill in job_required_skills:
@@ -33,17 +35,38 @@ def generate_recommendations(resume_skills: list[str], job_required_skills: list
                     
             if weak_found:
                 weak.append(skill)
-                recs.append(f"If you have used {skill}, consider specifying it explicitly (you mentioned related skills).")
+                recs.append(Recommendation(
+                    impact="HIGH",
+                    action=f"Add {skill} explicitly",
+                    evidence_type="Required skill • Weak evidence detected"
+                ))
             else:
                 missing.append(skill)
-                recs.append(f"If you have used {skill}, consider specifying it explicitly.")
+                recs.append(Recommendation(
+                    impact="HIGH",
+                    action=f"Add {skill}",
+                    evidence_type="Required skill • Missing"
+                ))
                 
     # Preferred skills - less strict
     for skill in job_preferred_skills:
         if skill in resume_skills:
             matched.append(skill)
         else:
-            recs.append(f"If you have used {skill}, consider specifying it explicitly (Bonus).")
+            missing.append(skill) # Consider it missing but preferred
+            recs.append(Recommendation(
+                impact="MEDIUM",
+                action=f"Mention {skill} if you have used it",
+                evidence_type="Preferred skill • Missing"
+            ))
+            
+    # Low impact keywords
+    for kw in missing_kws[:3]: # Limit to top 3 missing general keywords
+        recs.append(Recommendation(
+            impact="LOW",
+            action=f"Include '{kw}' in your experience where applicable",
+            evidence_type="General terminology improvement"
+        ))
             
     return {
         "matched_skills": matched,
