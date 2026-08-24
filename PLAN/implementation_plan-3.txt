@@ -1,0 +1,105 @@
+# ResumeMatch Day 3 Implementation Plan
+
+This plan details the implementation for Day 3 of the ResumeMatch sprint: **NLP Intelligence**. Having solidified the foundation and proven the limitations of pure lexical overlap (TF-IDF keyword stuffing), Day 3 introduces **skill-aware and requirement-aware matching** (lexical/entity rule-based matching).
+
+> [!IMPORTANT]
+> **Status**: Frozen and Ready for Execution.
+
+## Proposed Changes
+
+### 1. Curated Skills Dictionary & Normalization (150-250 Skills)
+- **[NEW] `data/skills.json`**: Build a substantial dictionary of ~150-250 canonical skills across Programming, Data, Machine Learning, Databases, Cloud, BI, DevOps, Frameworks, and Big Data.
+- **Hierarchy Structure**: Each skill will include its canonical name, category, aliases, and crucially, a `generic_parent` to enable robust weak evidence detection.
+- **Extraction Rules**: Alias matching must **escape aliases before constructing regex patterns** (e.g., `re.escape(alias)`) to safely handle regex-significant characters like `C++` or `.NET`. Then it must use **word-boundary/phrase-aware matching** (e.g., regex `\b(R|C|Go)\b`) to prevent false positives.
+
+### 2. Skill Detection Engine
+- **[NEW] `src/skills.py`**: 
+  - `load_skills_dict()` to read `skills.json` and build a fast lookup map.
+  - `extract_skills(text, skills_dict)` to find and normalize canonical skills from the resume and JD text using the generated boundary-aware alias mappings.
+
+### 3. Requirements Extraction (Context-Aware)
+- **[NEW] `src/requirements.py`**:
+  - Implement sentence-aware / section-aware requirement extraction rather than simple regex proximity.
+  - **Flow**: `JD -> Sentences -> Requirement Markers ("required", "preferred") -> Candidate Terms in the same sentence/clause -> Required/Preferred Classification`.
+
+### 4. Comparison & Weak Evidence Hierarchy
+- **[NEW] `src/recommendations.py`**:
+  - Implement the comparison logic using a 3-level evidence hierarchy:
+    - **Exact Match (🟢)**: Resume has the exact canonical skill.
+    - **Generic/Category Match / Weak Evidence (🟡)**: JD requires "PostgreSQL" but Resume only has "SQL Database" or "Database".
+    - **No Evidence (🔴)**: Missing completely.
+  - Generate actionable recommendations.
+  - *Note: Proximity/action-verb checking (e.g., "Built" vs "Familiar with") is explicitly deferred to Day 5.*
+
+### 5. Orchestration & Provisional Hybrid Scoring
+- **[MODIFY] `src/models.py`**: Update `AnalysisResult` to accommodate the new structured outputs: `resume_skills`, `job_skills`, `matched_skills`, `missing_skills`, `weak_evidence`, `required_terms`, `preferred_terms`, `required_term_coverage`, and `recommendations`.
+- **[MODIFY] `src/scoring.py`**: Implement a explicitly provisional hybrid score:
+  - **Day 3 Provisional Score**:
+    - Keyword Coverage: 30%
+    - TF-IDF Similarity: 30%
+    - Skills Overlap: 20%
+    - Required Coverage: 10%
+    - *Experience/Education: 10% → NOT ACTIVE*
+  - **Formula**: `Provisional Score = (30 × keyword + 30 × similarity + 20 × skills + 10 × required) / 90`
+- **[MODIFY] `src/analysis.py`**: Wire the intelligence layers into the orchestrator.
+
+## Final Architecture Flow
+```text
+                 JOB DESCRIPTION
+                        │
+                        ▼
+                requirements.py
+                 │             │
+                 ▼             ▼
+              REQUIRED      PREFERRED
+                 │             │
+                 └──────┬──────┘
+                        ▼
+                    skills.py
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+      Resume Skills               JD Skills
+          │                           │
+          └─────────────┬─────────────┘
+                        ▼
+               recommendations.py
+                        │
+              ┌─────────┼─────────┐
+              ▼         ▼         ▼
+           MATCHED    WEAK      MISSING
+                        │
+                        ▼
+                 Recommendations
+                        │
+                        ▼
+                    scoring.py
+                        │
+                        ▼
+                Provisional Score
+                        │
+                        ▼
+                 AnalysisResult
+                        │
+                        ▼
+                   Streamlit
+```
+
+## Verification Plan
+
+### Automated Tests
+- **[NEW] `tests/test_skills.py`**: Verify alias normalization and hierarchical structure loading.
+- **[NEW] `tests/test_requirements.py`**: Verify sentence-aware requirement extraction.
+- **[NEW] `tests/test_recommendations.py`**: Verify the weak evidence engine flags generic vs. specific overlaps.
+
+### Evaluation Experiment (Day 3 Validation)
+- We will formally evaluate the new **skill-aware model** across specific scenarios:
+  1. **Lexical Stuffing (Test A)**: Normal resume vs Keyword-stuffed resume. Expected: *Skill-aware matching identifies the distinct skills, but may still be vulnerable to skill stuffing because evidence strength is not yet modeled.*
+  2. **Generic Terminology (Test B)**: JD needs PostgreSQL, Resume says "databases" -> Expected: Weak Evidence.
+  3. **Exact Skill (Test C)**: Exact canonical matches -> Expected: Matched.
+  4. **Unrelated Skill (Test D)**: Completely missing -> Expected: Missing.
+  5. **Alias Equivalence (Test E)**: JD: "PostgreSQL", Resume: "Postgres" -> Expected: Matched canonical skill.
+  6. **False-Positive Protection (Test F1/F2)**: 
+     - **F1 (False positive)**: JD: "R programming", Resume: "Our company..." -> Expected: "R" NOT detected.
+     - **F2 (True positive)**: JD: "R programming", Resume: "Built models in R." -> Expected: Canonical "R" detected.
+  - **Traceable Evolution**: The experiment must record actual textual outputs (e.g., specific missing requirements, score differences) rather than just PASS/FAIL, creating a traceable evolution of the model for the MSc report.
